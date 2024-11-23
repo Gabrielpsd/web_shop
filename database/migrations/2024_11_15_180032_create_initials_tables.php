@@ -47,6 +47,15 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        
+        Schema::create('entrada_mercadorias', function (Blueprint $table) {
+            $table->id();
+            $table->integer('id_fornecedor');
+            $table->foreign('id_fornecedor')->references('id')->on('cliente_fornecedor');
+            $table->date('data_compra');
+            $table->timestamps();
+        });
+
         Schema::create('entrada_produtos', function (Blueprint $table) {
             $table->id();
             $table->integer('id_produto');
@@ -66,14 +75,6 @@ return new class extends Migration
             $table->foreign('id_produto')->references('id')->on('produtos');
             $table->integer('quantidade');
             $table->float('preco');
-            $table->timestamps();
-        });
-
-        Schema::create('entrada_mercadorias', function (Blueprint $table) {
-            $table->id();
-            $table->integer('id_fornecedor');
-            $table->foreign('id_fornecedor')->references('id')->on('cliente_fornecedor');
-            $table->date('data_compra');
             $table->timestamps();
         });
        
