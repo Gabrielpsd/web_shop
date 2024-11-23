@@ -26,7 +26,7 @@ export default{
         salvaAlteracoes(){
             if(this.validacoes())
             {
-                console.log("vou requisitar")
+
                 let obj = this
                 const csrfToken = document.getElementsByName("_token")[0].value
                 var request = new XMLHttpRequest()
@@ -68,10 +68,20 @@ export default{
                 retorno = false
             }
 
-            console.log(this.cpf_cnpj)
+            if(isNaN(parseInt(this.idade)))
+            {
+                this.idadeInvalida = true
+                retorno =  false
+            }
+
+            if(this.sexo === '0')
+            {
+                this.sexoInvalido = true
+                retorno =  false
+            }
+            
             if(this.cpf_cnpj.length != 14 && this.cpf_cnpj.length != 11)
             {
-                console.log("entrei aqui ")
                 this.cpfInvalido = true
                 retorno = false
             }
@@ -131,12 +141,14 @@ export default{
                 <h5>CPF/CNPJ</h5>
                 <CpfCNPJinput :disable="edicaoInativa" :number="this.cpf" @atualiza="(arg)=>this.cpf_cnpj = arg"></CpfCNPJinput>
                     <h5>Idade</h5>
-                    <inputIntNumber :disable="edicaoInativa"></inputIntNumber>
+                    <inputIntNumber :number="idade" @atualiza="(args)=>{this.idade = args}" :disable="edicaoInativa"></inputIntNumber>
             </div> 
         </div>
         <ul v-if="tamanhoNomeInvalido">
             <li v-if="tamanhoNomeInvalido">Nome deve conter no minimo 3 caracteres</li>
             <li v-if="cpfInvalido">CFP/CNPJ incompleto</li>
+            <li v-if="idadeInvalida">Idade inválida</li>
+            <li v-if="sexoInvalido">Selecione o sexo do cliente</li>
         </ul>
     </div>
 </template>
