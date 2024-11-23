@@ -2,6 +2,9 @@
 import Layout from '../shared/Layout.vue'
 import produtoCard from '../cartoes/produtoCard.vue'
 import adiciona from './adiciona.vue'
+import { readUsedSize } from 'chart.js/helpers';
+import GraficoDonut from '../Dashboard/graficos/graficoDonut.vue';
+import rotas from '../Assets/ConfigFiles/apiconfig'
 
 export default {
     layout: Layout,
@@ -12,30 +15,166 @@ export default {
     },
     components:{
         produtoCard,
-        adiciona
+        adiciona,
+        GraficoDonut
     },
     data(){
         return{
-            produtos: this.Produtos
+            produtos: this.Produtos,
+            fornecedor:0,
+            marca:0,
+            id_lancamento:'',
+            descricao:'',
+            status: '0',
+            key: 1,
+            itemsFiltrados: [],
+            dadosGraficoProdutosPorMarca: {labels: [], data:[], carregado: false, colors: [],key:0},
+            dadosGraficoProdutosPorFornecedores: {labels: [], data:[], carregado: false, colors: [],key:0},
+            dadosGraficoVendasInativosEAtivos: {labels: [], data:[], carregado: false, colors: [],key:0}
+            
         }
     },
+    computed:{
+        filtraBusca: function(){
+            let items =  this.produtos.filter((item)=>{
+                return ((item.id+'').toLowerCase().indexOf(this.id_lancamento) > -1) 
+            }).filter((item)=>{
+                return ((item.descricao+'').toLowerCase().indexOf(this.descricao.toLowerCase()) > -1)     
+            }).filter((item)=>{
+                if(this.marca == '' || this.marca==0 )
+                    return true
+
+                return (item.id_marca == this.marca)     
+            }).filter((item)=>{
+                if(this.fornecedor == '' || this.fornecedor==0 )
+                    return true
+
+                return (item.id_fornecedor == this.fornecedor)     
+            }).filter((item)=>{
+                if(this.status === 0 || this.status === '0')
+                    return true
+                return(item.ativo == this.status)
+            })
+
+            this.itemsFiltrados = items
+            
+            return items
+        }
+    },  
     methods:{
         inserirProduto(produto){
             this.produtos.push(produto)
         },
         removerProduto(idProduto){
             this.produtos = this.produtos.filter((item)=>item.id != idProduto)
+        },
+        montaGrafico(){
+
+            this.dadosGraficoProdutosPorMarca = {labels: [], data:[], colors: [], carregado: false, key: this.dadosGraficoProdutosPorMarca.key + 1}
+            this.dadosGraficoProdutosPorFornecedores = {labels: [], data:[], colors: [],carregado: false, key: this.dadosGraficoProdutosPorFornecedores.key + 1}
+            this.dadosGraficoVendasInativosEAtivos = {labels: [], data:[], colors: [],carregado: false, key: this.dadosGraficoVendasInativosEAtivos.key + 1}
+            
+            let totalPorMarca = {}
+            let totalPorFornecedor = {}
+            let totalAtivoEInativo = {}
+
+            this.itemsFiltrados.forEach((element)=>{
+                totalPorMarca[element.marca] = (totalPorMarca[element.marca] || 0) + 1
+                totalPorFornecedor[element.fornecedor] = (totalPorFornecedor[element.fornecedor] || 0) + 1
+                totalAtivoEInativo[element.ativo] = (totalAtivoEInativo[element.ativo] || 0) + 1
+            })
+
+            for(let item of Object.entries(totalPorMarca))
+            {
+                this.dadosGraficoProdutosPorMarca.data.push(item[1])
+                this.dadosGraficoProdutosPorMarca.labels.push(item[0])
+                this.dadosGraficoProdutosPorMarca.colors.push(rotas.geracor())
+            }
+
+            for(let item of Object.entries(totalPorFornecedor))
+            {
+                this.dadosGraficoProdutosPorFornecedores.data.push(item[1])
+                this.dadosGraficoProdutosPorFornecedores.labels.push(item[0])
+                this.dadosGraficoProdutosPorFornecedores.colors.push(rotas.geracor())
+            }
+
+            for(let item of Object.entries(totalAtivoEInativo))
+            {
+                this.dadosGraficoVendasInativosEAtivos.data.push(item[1])
+                this.dadosGraficoVendasInativosEAtivos.labels.push(item[0])
+                this.dadosGraficoVendasInativosEAtivos.colors.push(rotas.geracor())
+            }
+
+            this.dadosGraficoProdutosPorFornecedores.carregado = true
+            this.dadosGraficoProdutosPorMarca.carregado = true
+            this.dadosGraficoVendasInativosEAtivos.carregado = true
         }
+    },
+    watch:{
+        itemsFiltrados()
+        {
+            this.montaGrafico() 
+        }    
     }
 
 }
 </script>
 
 <template>
-    <div >
+    <div>
+        <div class="filtros">
+            <h4>Filtros</h4>
+            <input v-model="id_lancamento" placeholder="ID lancamento" />
+            <input v-model="descricao" placeholder="Descricao" />
+                <select v-model="fornecedor">
+                    <option  value="0">Fornecedor</option>
+                    <option v-for="fornecedor in this.Fornecedores" :value="fornecedor.id">{{fornecedor.descricao}}</option>
+                </select>
+                <select v-model="marca">
+                    <option  value="0">Marca</option>
+                    <option v-for="marca in this.Marcas" :value="marca.id">{{marca.descricao}}</option>
+                </select>
+                <select v-model="status">
+                    <option  value="0">Status</option>
+                    <option  :value="false">Inativos</option>
+                    <option  :value="true">Ativos</option>
+                </select>
+        </div>
+        <div class="chartArea">
+            <div class="chart">
+                <GraficoDonut 
+                    :Label="'Produtos Inativos VS ativos'"
+                    :data="dadosGraficoVendasInativosEAtivos.data" 
+                    :labels="dadosGraficoVendasInativosEAtivos.labels" 
+                    :Colors="dadosGraficoVendasInativosEAtivos.colors" 
+                    v-if="dadosGraficoVendasInativosEAtivos.carregado"
+                    :key="dadosGraficoVendasInativosEAtivos.key">
+                </GraficoDonut>
+            </div>
+            <div class="chart">
+                <GraficoDonut 
+                    :Label="'Quantidade por fornecedor'"
+                    :data="dadosGraficoProdutosPorFornecedores.data" 
+                    :labels="dadosGraficoProdutosPorFornecedores.labels" 
+                    :Colors="dadosGraficoProdutosPorFornecedores.colors" 
+                    v-if="dadosGraficoProdutosPorFornecedores.carregado"
+                    :key="dadosGraficoProdutosPorFornecedores.key">
+                </GraficoDonut>
+            </div>
+            <div class="chart">
+                <GraficoDonut 
+                    :Label="'Quantidade por marca'"
+                    :data="dadosGraficoProdutosPorMarca.data" 
+                    :labels="dadosGraficoProdutosPorMarca.labels" 
+                    :Colors="dadosGraficoProdutosPorMarca.colors" 
+                    v-if="dadosGraficoProdutosPorMarca.carregado"
+                    :key="dadosGraficoProdutosPorMarca.key">
+                </GraficoDonut>
+            </div>
+        </div>
         <div class="grid">
             <adiciona :Fornecedores="Fornecedores" :Marcas="Marcas" @adicionar="(produto)=>inserirProduto(produto)" ></adiciona>
-            <produtoCard  :Fornecedores="Fornecedores" :Marcas="Marcas" :produto='produto' v-for="produto in produtos" @removerProduto="(idProduto)=>removerProduto(idProduto)"></produtoCard>
+            <produtoCard  :Fornecedores="Fornecedores" :Marcas="Marcas" :produto='produto' v-for="produto in filtraBusca" @removerProduto="(idProduto)=>removerProduto(idProduto)" :key="produto.id"></produtoCard>
         </div>
     </div>
 </template>
@@ -50,35 +189,21 @@ export default {
         margin: 0 auto;
         width: 80%;
     }
-    h2{
-      text-align: center;
-      margin-top: 50px;
-      margin-bottom: 50px;  
-    }
-    .busy_dot{
-        height: 20px;
-        width: 20px;
-        background-color: red;
-        border-radius: 50%;
-        padding: 10px;
-
-    }
-    .free_dot{
-        height: 20px;
-        width: 20px;
-        background-color: green;
-        border-radius: 50%;
-        padding: 10px;
-
-    }
-    .tables{
+    .filtros{
         display: flex;
-        align-items: baseline;
-        margin-left: 200px;
-        padding: 5px;
+        flex-direction: row;
+        justify-content: space-evenly;
+        margin: 10px;
     }
-    .tables>p{
-        padding-right: 20px;
-        padding-left: 5px;
+    .chart{
+        height: 200px;
+        width: 25%;
+    }
+    .chartArea{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        margin: 20px;
+        max-width: 100%;
     }
 </style>

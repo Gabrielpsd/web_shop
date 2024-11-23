@@ -24,26 +24,27 @@ export default{
     },
     created(){
         this.atualizaPrecoTotal()
-
     },
     methods:{
-        updatePreco(){
+        atualizaPreco(args){
+            this.preco = args
             this.atualizaPrecoTotal()
             this.$emit('update:preco',this.preco)
             this.$emit('modificacao',this.produto.id)
         },
-        updateQuantidade(){
+        atualizaQuantidade(args){
             if(isNaN(this.quantidade) || !this.quantidade)
             {
                 this.quantidade = 0
             }
+            
+            this.quantidade = args
             this.atualizaPrecoTotal()
             this.$emit('update:quantidade',this.quantidade)
             this.$emit('modificacao',this.produto.id)
            
         },
         atualizaPrecoTotal(){
-            
             let resultado = (parseFloat(this.preco) * parseInt(this.quantidade)) + ''
             this.precoTotal = resultado
         },
@@ -57,19 +58,19 @@ export default{
             <div class="d-flex justify-content-between">
             <div class="rounded border border-secondary padding" >
                 Quantidade:
-                <inputIntNumber :number="quantidade" v-model:number="quantidade" @atualiza="updateQuantidade"></inputIntNumber>
+                <inputIntNumber :number="quantidade" @atualiza="(args)=>atualizaQuantidade(args)"></inputIntNumber>
             </div> 
             <div class="rounded border border-secondary padding" >
                 Preço:
                 <div>
-                    R$
-                    <inputFloatNumber :number="preco" v-model:number="preco" @atualiza="updatePreco"></inputFloatNumber>
+                    R$  
+                    <inputFloatNumber :number="preco" @atualiza="(args)=>atualizaPreco(args)"></inputFloatNumber>
                 </div>
             </div>
             <div class="rounded border border-secondary padding" > 
                 Total:
                 <div>
-                    <inputFloatNumberDisable :number="this.precoTotal" :key="precoTotal"></inputFloatNumberDisable>
+                    <inputFloatNumberDisable :number="precoTotal" :key="precoTotal"></inputFloatNumberDisable>
                 </div>
             </div>
         </div>

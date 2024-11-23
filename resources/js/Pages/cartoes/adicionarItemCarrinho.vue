@@ -20,35 +20,28 @@ export default{
             quantidade: 0,
             precoTotal: 0,
             itemSelecionado: '0',
-            itemInvalido: false
+            itemInvalido: false,
+
         }
     },
-    created(){
-        this.atualizaPrecoTotal()
-    },
-
     methods:{
-        updateQuantidade(){
-            if(isNaN(this.quantidade) || !this.quantidade)
+        atualizaQuantidade(args){
+            if(isNaN(args) || !args)
             {
                 this.quantidade = 0
             }
 
-            this.atualizaPrecoTotal()
-           
+            this.quantidade = parseInt(args)
+            this.precoTotal = (parseFloat(this.preco) * parseInt(this.quantidade)) + ''
         },
-        atualizaPrecoTotal(){
-            
-            let resultado = (parseFloat(this.preco) * parseInt(this.quantidade)) + ''
-            this.precoTotal = resultado
+
+        atualizaPreco(args){
+            this.preco = parseFloat(args)
+            this.precoTotal = (parseFloat(this.preco) * parseInt(this.quantidade)) + ''
         },
-        atualizaInformacaoSelecao(){
-           let indexItemSelecionado = this.Produtos.findIndex((item)=>item.id == this.itemSelecionado)
-           this.preco = this.Produtos[indexItemSelecionado].preco
-           this.quantidade = 1
-           this.atualizaPrecoTotal()
-        },
+        
         salvar(){
+
             if(this.itemSelecionado == 0)
             {
                 this.itemInvalido = true
@@ -63,11 +56,10 @@ export default{
             this.quantidade=0
             this.precoTotal=0
             this.itemSelecionado= '0'
-            /*this.$emit("update:itemInserir",objetoInserir) */
-
+            
             this.$emit("insereObjeto",objetoInserir)
         }
-    },
+    }
 }
 </script>
 
@@ -86,16 +78,16 @@ export default{
     </select>
     <div class="outside ">
         <div class="fw-bold "></div>   
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between" :class="{bloqueado: this.itemSelecionado == 0}">
             <div class="rounded border border-secondary padding" >
                 Quantidade:
-                <inputIntNumber :number="quantidade" v-model:number="quantidade" @atualiza="updateQuantidade" :key="quantidade"></inputIntNumber>
+                <inputIntNumber :number="quantidade" @atualiza="(args)=>atualizaQuantidade(args)" :key="itemSelecionado"></inputIntNumber>
             </div> 
             <div class="rounded border border-secondary padding" >
                 Preço:
                 <div>
                     R$
-                    <inputFloatNumber :number="preco" v-model:number="preco" :key="preco"></inputFloatNumber>
+                    <inputFloatNumber :number="preco" @atualiza="(args)=>atualizaPreco(args)" :key="itemSelecionado"></inputFloatNumber>
                 </div>
             </div>
             <div class="rounded border border-secondary padding" > 
@@ -126,5 +118,9 @@ export default{
     }
     .margin{
         margin: 1%;
+    }
+    .bloqueado{
+        cursor: not-allowed; /* Change cursor to indicate unavailability */
+        pointer-events: none; /* Disable all mouse events */
     }
 </style>

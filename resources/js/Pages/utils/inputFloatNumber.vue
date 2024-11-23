@@ -16,8 +16,7 @@
         },
         methods:{
             updateNumber(number){
-                this.$emit('update:number',number)
-                this.$emit('atualiza')
+                this.$emit('atualiza',number)
             },
         
             formataParaBrasil(number){
@@ -83,6 +82,6 @@
 
 <template>
      <label>
-        <input size="5" :placeholder="inputNumber" :value="inputNumber" @input="updateNumber" v-on:keydown="verificaDigito">
+        <input size="10" :placeholder="inputNumber" :value="inputNumber" @input="updateNumber" v-on:keydown="verificaDigito">
     </label>
 </template>

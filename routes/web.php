@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\DashBoard_controller;
+use App\Http\Controllers\DashBoardController;
+use App\Http\Controllers\EntradaMercadoriaController;
 use App\Http\Controllers\PedidosController;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\ProdutoController;
@@ -18,7 +19,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 /* Dashboard Area */
-Route::get('/', [DashBoard_controller::class,'index']);
+Route::get('/',  [PedidosController::class,'index']);
+Route::get('/api/dashboard/vendasporsexo', [DashBoardController::class,'vendasPorSexo']);
+Route::get('/api/dashboard/pessoasPorIdade', [DashBoardController::class,'pessoasPorIdade']);
+Route::get('/api/dashboard/vendasPorIdade', [DashBoardController::class,'vendasPorIdade']);
+Route::get('/api/dashboard/produtospormarca', [DashBoardController::class,'produtosPorMarca']);
 
 /* Produtos */ 
 Route::get('/produtos', [ProdutoController::class,'index']);
@@ -38,9 +43,24 @@ Route::post('/api/clientesfornecedores/editar/{id}', [PessoaController::class,'e
 Route::post('/api/clientesfornecedores/inserir', [PessoaController::class,'inserirPessoa']);
 Route::delete('/api/clientesfornecedores/excluir/{id}', [PessoaController::class,'deletarClienteFornecedor']);
 
-
 /* Pedidos */ 
 Route::get('/pedidos', [PedidosController::class,'index']);
 Route::post('/api/pedidos/criarpedido', [PedidosController::class,'inserirPedido']);
-Route::post('/api/pedidos/editar/{id}', [PedidosController::class,'editarProduto']);
+Route::get('/pedidos/detalhe/{id}', [PedidosController::class,'editarPedido']);
+Route::delete('/api/pedidos/excluir/{id}', [PedidosController::class,'excluirPedido']);
+Route::post('/api/pedidos/inserirProdutos/{id}',[PedidosController::class,'inserirProdutos']);
+Route::post('/api/pedidos/editarProdutoPedido/{id}',[PedidosController::class,'editarProdutoPedido']);
+Route::post('/api/pedidos/removerProdutosPedido/{id}',[PedidosController::class,'removerProdutosPedido']);
+/* Route::post('/api/pedidos/editar/{id}', [PedidosController::class,'editarProduto']); */
 
+/* Entrada de mercadoria */ 
+Route::get('/entradas', [EntradaMercadoriaController::class,'index']);
+Route::post('/api/entradas/criarpedido', [EntradaMercadoriaController::class,'criarPedido']);
+Route::delete('/api/entradas/excluir/{id}', [EntradaMercadoriaController::class,'deletarEntrada']);
+Route::get('/entradas/detalhe/{id}', [EntradaMercadoriaController::class,'detalheEntrada']);
+Route::post('/api/entradas/inserirProdutos/{id}',[EntradaMercadoriaController::class,'inserirProdutos']);
+Route::post('/api/entradas/editarProdutos/{id}',[EntradaMercadoriaController::class,'editarProdutoPedido']);
+Route::post('/api/entradas/removerProdutos/{id}',[EntradaMercadoriaController::class,'removerProdutosPedido']);
+
+/* Upload a file */ 
+Route::post('/api/upload', [EntradaMercadoriaController::class,'uploadFile']);

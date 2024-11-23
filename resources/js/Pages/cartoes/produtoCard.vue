@@ -5,6 +5,7 @@ import rotas from '../Assets/ConfigFiles/apiconfig'
 import inputFloatNumber from '../utils/inputFloatNumber.vue';
 import inputFloatNumberDisable from '../utils/inputFloatNumberDisable.vue';
 import modalRetornoIncorreto from '../modal/modalRetornoIncorreto.vue';
+import modalConfirmaExclusao from '../modal/modalConfirmaExclusao.vue';
 
 export default{
     layout: Layout,
@@ -16,7 +17,8 @@ export default{
     components:{
         inputFloatNumber,
         inputFloatNumberDisable,
-        modalRetornoIncorreto
+        modalRetornoIncorreto,
+        modalConfirmaExclusao
     },
     data(){
         return{
@@ -26,21 +28,26 @@ export default{
             modalAtivo: false,
             fornecedor: this.produto.id_fornecedor,
             marca: this.produto.id_marca,
-            modalMensagem: {titulo: 'Erro ao processar registro', mensagem :'Não foi possível processar registro'}
-       
+            modalMensagem: {titulo: 'Erro ao processar registro', mensagem :'Não foi possível processar registro'},
+            itemAtivo: this.produto.ativo,
+            exclusaoAtiva: false
         }
     },
     methods: {
         salvaAlteracoes(){
-            if(this.produto.descricao != this.descricao || this.produto.preco != this.preco)
+            if(this.validacoes())
             {
                 const csrfToken = document.getElementsByName("_token")[0].value
                 var request = new XMLHttpRequest()
-                var data = JSON.stringify({descricao:this.descricao, preco: this.preco, id_fornecedor: this.fornecedor, id_marca:this.marca})
+                var data = JSON.stringify(
+                    {descricao:this.descricao, 
+                        preco: this.preco, 
+                        id_fornecedor: this.fornecedor, 
+                        id_marca:this.marca,
+                        ativo: this.itemAtivo})
                 request.open('POST',rotas.produtos.editar(this.produto.id),true)
                 request.setRequestHeader('X-CSRF-TOKEN',csrfToken)
                 request.setRequestHeader("Content-Type","application/json")
-
                 
                 request.send(data)
 
@@ -64,6 +71,7 @@ export default{
                 request.open('DELETE',rotas.produtos.remover(this.produto.id),true)
                 request.setRequestHeader('X-CSRF-TOKEN',csrfToken)
 
+                this.exclusaoAtiva = false
                 request.onload = function(){
                     if(this.readyState == XMLHttpRequest.DONE)
                         if(this.status == 209)
@@ -79,12 +87,36 @@ export default{
                 } 
 
                 request.send()
-        }
+        },
+        validacoes(){
+            let retorno = false
+            if(this.produto.descricao != this.descricao)
+                retorno = true
+            if(this.produto.preco != this.preco)
+                retorno = true
+            if(this.fornecedor != this.produto.id_fornecedor)
+                retorno = true
+            if(this.marca != this.produto.id_marca)
+                retorno = true
+            if(this.itemAtivo != this.produto.ativo)
+                retorno = true
+
+            return retorno
+        },
+        excluiCadastro(arg){
+            if(arg == false)
+                this.exclusaoAtiva = false
+            else
+            {
+                this.excluiProduto()
+            }
+        },
     }
 }
 </script>
 
 <template>
+    <modalConfirmaExclusao v-if="exclusaoAtiva" @respostaModal="(arg)=>excluiCadastro(arg)"></modalConfirmaExclusao>
     <modalRetornoIncorreto v-if="modalAtivo" @fechaModal="()=>this.modalAtivo = false" :mensagem="modalMensagem"></modalRetornoIncorreto>
     <div class="card border-dark mb-3" style="max-width: 18rem;" >
         <div class="card-header spacing">
@@ -112,7 +144,7 @@ export default{
                     </svg>
                     Cancelar
                 </button>
-                <button  class="btn btn-outline-danger" @click="excluiProduto()" v-if="edicaoInativa">
+                <button  class="btn btn-outline-danger" @click="exclusaoAtiva = true" v-if="edicaoInativa">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
                         <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
@@ -124,15 +156,21 @@ export default{
         <div class="card-body text-dark">
             <h5 class="card-title">Descricao<input type="text" v-bind:readonly="edicaoInativa" v-model="descricao"></h5>
             <div >
+                <h6>Fornecedor</h6>
                 <select v-model="fornecedor" :disabled="edicaoInativa">
                     <option disabled value="0">Selecione um fornecedor</option>
                     <option v-for="fornecedor in this.Fornecedores" :value="fornecedor.id">{{fornecedor.descricao}}</option>
                 </select>
-
+                <h6>Marca</h6>
                 <select v-model="marca" :disabled="edicaoInativa">
                     <option disabled value="0">Selecione uma marca</option>
                     <option v-for="marca in this.Marcas" :value="marca.id">{{marca.descricao}}</option>
                 </select>
+                <div>       
+                    <label for="checkbox" v-if="itemAtivo">Item ativo</label>
+                    <label for="checkbox" v-if="!itemAtivo">Item inativo</label>
+                    <input type="checkbox" id="checkbox" v-model="itemAtivo" :disabled="edicaoInativa"/>
+                </div>
             </div>
             <div v-if="edicaoInativa">
                 Preço R$: <inputFloatNumberDisable  :number="preco" v-model:number="preco" :key="preco"></inputFloatNumberDisable>
@@ -143,3 +181,14 @@ export default{
         </div>
     </div>
 </template>
+
+<style scoped>
+     select{
+        margin: 2px;
+        max-width: 200px;
+    }
+    input{
+        margin: 2px;
+        max-width: 200px;
+    }
+</style>

@@ -13,7 +13,16 @@ class ProdutoController extends Controller
 {
     public function index(){
         $sql = <<< TODOSPRODUTOS
-                select * from produtos
+                select 
+                    produtos.*,
+                    cliente_fornecedor.descricao as fornecedor,
+                    marcas.descricao as marca
+                from 
+                    produtos
+                join cliente_fornecedor on
+                    cliente_fornecedor.id = produtos.id_fornecedor
+                join marcas on 
+                    marcas.id = produtos.id_marca
         TODOSPRODUTOS;
 
         $produtos = DB::select($sql);
@@ -43,7 +52,13 @@ class ProdutoController extends Controller
     public function inserirProduto(Request $request){
         $dados = $request->all();
 
-        $response = Produto::create(['descricao'=>$dados['descricao'],'preco'=>$dados['preco'],'id_fornecedor'=>$dados['id_fornecedor'],'id_marca'=>$dados['id_marca']]);
+        $response = Produto::create(
+            ['descricao'=>$dados['descricao'],
+            'preco'=>$dados['preco'],
+            'id_fornecedor'=>$dados['id_fornecedor'],
+            'id_marca'=>$dados['id_marca'],
+            'ativo'=>$dados['ativo']
+        ]);
 
         return response()->json($response);
     }

@@ -1,23 +1,25 @@
 <script>
 import Layout from '../shared/Layout.vue'
-import rotas from '../Assets/ConfigFiles/apiconfig'
+import rotas, { PRODUTOS } from '../Assets/ConfigFiles/apiconfig'
 import { router } from '@inertiajs/vue3'
-
+import axios from 'axios';
 export default{
     layout: Layout,
     props: {
-        Clientes: Array
+        Fornecedores: Array,
+        Produtos: Array
     },
     data(){
         return{
-            cliente: 0,
+            fornecedor: 0,
             edicaoInativa: true,
-            clienteInvalido: false,
-            data_venda: new Date().toLocaleDateString('pt-BR', {timeZone: 'UTC'}),
-            dataOriginal: ''
-        }
+            fornecedorInvalido: false,
+            extensaoInvalida: false,
+            dataOriginal: '',
+            data_compra: new Date().toLocaleDateString('pt-BR', {timeZone: 'UTC'}),
+          }
     },
-    methods: {
+    methods: {  
         salvaAlteracoes(){
             if(this.validacoes())
             {
@@ -25,10 +27,8 @@ export default{
                 const csrfToken = document.getElementsByName("_token")[0].value
                 var request = new XMLHttpRequest()
                 
-                let pessoa = JSON.stringify({'id_cliente':this.cliente,
-                    'data_venda': this.data_venda
-                })
-                request.open('POST',rotas.pedidos.criar,true)
+                let pessoa = JSON.stringify({'id_fornecedor':this.fornecedor, 'data_compra': this.dataOriginal})
+                request.open('POST',rotas.entradas.criar,true)
                 request.setRequestHeader("Content-Type","application/json")
                 request.setRequestHeader('X-CSRF-TOKEN',csrfToken)
                 
@@ -37,37 +37,37 @@ export default{
                         if(this.status == 200)
                         {
                             let page = JSON.parse(this.responseText)
-                            page = page.id
-                            router.get(rotas.pedidos.detalhe(page))
                         }
                 } 
+
                 request.send(pessoa)
                 this.cancelaAdicao()
             } 
+
         },
         validacoes()
         {
-            if(this.cliente == 0)
+            if(this.fornecedor == 0)
             {
-                this.clienteInvalido = true
+                this.fornecedorInvalido = true
                 return false
             }
 
             return true
         },
         cancelaAdicao(){
-            this.cliente = 0
+            this.fornecedor = 0
             this.edicaoInativa = true
-        }, 
-        formataData(arg)
-        {
+        },
+        formataData(arg){
+
             if(this.edicaoInativa)
                 return
 
-            let data = new Date(arg.originalTarget.value)
-            this.data_venda = data.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
             this.dataOriginal = arg.originalTarget.value
+            this.data_compra = new Date(arg.originalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})
         }
+         
     }
 }
 </script>
@@ -76,7 +76,7 @@ export default{
    <div class="card border-dark mb-3" style="max-width: 18rem;" >
         <div class="card-header spacing">
             <button  class="btn btn-primary"  @click="edicaoInativa = false" v-if="edicaoInativa">
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAyElEQVR4nOWTMQ7CMAwA+y5UdsoD2OEHTHSifIE/8BN2HkFnBsRWWzoUqYNVlCYp7VCw5KGyc5c4aZb9fAisBWoFfOnqAsVQQd0HN5L7IIEaSAMLW2sgt/UxBHlHsBxVoIH8U4FM/YoECrc4BBdYZbMPhVLgJXCOad4o3AQaz2iutl/gZEb2DMGPKZcqBt5m2QevYuDSXmoX7r4HwQUu3f5U+C7lp9LPDfjh3wokBPcdOQL8UNhHwc1JDgZSJS1OkLhxbSeBzy7e9BUdiz19RJEAAAAASUVORK5CYII=" alt="sell">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABXklEQVR4nNWVPS8EURSGR0REraCUELXoiMIvoNBoxMcvoKJSWZsgoaOVCJFI9BQKjUYv8bUi6CSswu57kkfu5hZjzIz9GMk6yc1N5pz3POe+kzsTBM0UQJ/gGej9E4Bg1AC31yK6FXwItoHWzAEGs4JdJzSYzgJgMCO4joofBPsZAY7iAIeCuywAgkfBXpS64MRAV4ygIFgLAwTr7nm0Fuj2ds9/S5RhyIvHYwAbXnQe3h0kpnbM5cowHCW3Cz4F+YRj533zyhJsJtStqNKfjh9JgwuDszhhGJLU3IXBicFlbFKwJSim3QegPyXXIngV7CTRJ92EJRgI6ogSDHoL55Im6PEWHBgs1riWBVeCN6AzcQrBS/hlWpVLYM77MoykHtPgWHAPtNVj068hmPBTnRos1WjTVFUQdwsFT3XYdBM0VQhW/b8i10hNGqDoj/7eSE0aIOcauO9LIzX/O74Aa1aRIpm8gtgAAAAASUVORK5CYII=" alt="buy">
                 Novo Pedido
             </button>
             <button  class="btn btn-success" @click="salvaAlteracoes()" v-if="!edicaoInativa">
@@ -94,17 +94,17 @@ export default{
             </button>
         </div>
         <div class="card-body text-dark" >
-            <select v-model="cliente" :disabled="edicaoInativa">
-                <option disabled value="0">Selecione um cliente</option>
-                <option v-for="cliente in this.Clientes" :value="cliente.id">{{cliente.descricao}}</option>
+            <select v-model="fornecedor" :disabled="edicaoInativa">
+                <option disabled value="0">Selecione um fornecedor</option>
+                <option v-for="fornecedor in this.Fornecedores" :value="fornecedor.id">{{fornecedor.descricao}}</option>
             </select>
             <div>
-                <input type="text" :value="this.data_venda" :disabled="true"/>
+                <input type="text" :value="this.data_compra" :disabled="true"/>
                 <input type="date" class="date" @input="(arg)=>this.formataData(arg)">
             </div>
-         </div>
-        <ul v-if="clienteInvalido">
-            <li v-if="clienteInvalido">Selecione um cliente</li>
+        </div>
+        <ul>
+            <li v-if="fornecedorInvalido">Selecione um fornecedor</li>
         </ul>
     </div>
 </template>
@@ -115,6 +115,13 @@ export default{
     }
     .campoInvalido{
         border-color: red;
+    }
+    input{
+        margin: 2px;
+    }
+    select{
+        margin: 2px;
+        max-width: 200px;
     }
     .date{
         height: 30px;

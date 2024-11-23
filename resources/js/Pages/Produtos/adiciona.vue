@@ -2,6 +2,7 @@
 import Layout from '../shared/Layout.vue'
 import rotas from '../Assets/ConfigFiles/apiconfig'
 import inputFloatNumber from '../utils/inputFloatNumber.vue';
+import axios from 'axios';
 
 export default{
     layout: Layout,
@@ -22,18 +23,20 @@ export default{
             tamanhoDescricaoInvalida: false,
             precoMinimoInvalido: false,
             marcaInvalida: false,
-            fornecedorInvalido: false
+            fornecedorInvalido: false,
         }
     },
     methods: {
-        salvaAlteracoes(){
-            if(this.realizaValidacoes())
-            {
-                const csrfToken = document.getElementsByName("_token")[0].value
+        insereObjeto(){
+            const csrfToken = document.getElementsByName("_token")[0].value
                 let obj = this
                 var request = new XMLHttpRequest()  
-                let produto = JSON.stringify({descricao:this.descricao, preco: this.preco, id_fornecedor: this.fornecedor, id_marca:this.marca})
-                console.log(produto)
+                let produto = JSON.stringify({
+                    descricao:this.descricao, 
+                    preco: this.preco, 
+                    id_fornecedor: this.fornecedor, 
+                    id_marca:this.marca,
+                    ativo: true})
                 request.open('POST',rotas.produtos.inserir)
                 request.setRequestHeader("Content-Type","application/json")
                 request.setRequestHeader('X-CSRF-TOKEN',csrfToken)
@@ -49,8 +52,10 @@ export default{
                 request.send(produto)
 
                 this.cancelaAdicao()
-            } 
-
+        },
+        salvaAlteracoes(){
+            if(this.realizaValidacoes())
+                this.insereObjeto()
         },
         realizaValidacoes()
         {
@@ -96,7 +101,57 @@ export default{
             this.marca = 0
             this.marcaInvalida = false
             this.fornecedorInvalido = false
-        }
+        },
+        carregaArquivo()
+        {
+            this.extensaoInvalida = false 
+            let extension = this.$refs.file.files[0].name.substring(this.$refs.file.files[0].name.lastIndexOf('.')+1).toLowerCase()
+            if(!rotas.EXTENCOESVALIDAS.includes(extension))
+            {
+                this.extensaoInvalida = true;
+                return 
+            }
+            const csrfToken = document.getElementsByName("_token")[0].value
+
+            /* this.value =  ROTAARQUIVOS + this.$refs.file.files[0].name */
+            console.log(this.$refs.file.files[0].name)
+            let data = new FormData()
+
+            data.append('file',this.$refs.file.files[0])
+
+            axios.post(rotas.ROTAARQUIVOS,data).then((response)=>{
+                this.cadastraProdutos(response)})
+        },
+
+        cadastraProdutos(data){
+
+           /*  console.log(data.data.produtos) */
+            let fornecedor = this.Fornecedores.find((item)=>item.cpf_cnpj == data.data.Fornecedor.CPF_CNPJ[0])
+
+            if(fornecedor)
+            {
+                let i = 1
+
+                let marca = this.marca
+                
+                while(data.data.produtos[i])
+                {
+                    if(marca == 0 )
+                    {
+                        this.marcaInvalida = true
+                        return  
+                    }
+                    
+                    this.descricao = data.data.produtos[i].descricao[0]
+                    this.preco = data.data.produtos[i].preco[0]
+                    this.fornecedor = fornecedor.id
+                    this.marca = marca
+                    this.insereObjeto()
+                    i = i + 1 
+                }
+            }
+
+        }  
     }
 }
 </script>
@@ -125,11 +180,12 @@ export default{
         <div class="card-body text-dark">
             <h5 class="card-title">Descricao<input type="text" v-bind:readonly="edicaoInativa" v-model="descricao"></h5>
             <div >
+                <h6>Fornecedor</h6>
                 <select v-model="fornecedor" :disabled="edicaoInativa">
                     <option disabled value="0">Selecione um fornecedor</option>
                     <option v-for="fornecedor in this.Fornecedores" :value="fornecedor.id">{{fornecedor.descricao}}</option>
                 </select>
-
+                <h6>Marca</h6>
                 <select v-model="marca" :disabled="edicaoInativa">
                     <option disabled value="0">Selecione uma marca</option>
                     <option v-for="marca in this.Marcas" :value="marca.id">{{marca.descricao}}</option>
@@ -141,11 +197,18 @@ export default{
             <div v-if="!edicaoInativa">
                 Preço R$: <inputFloatNumber  :number="preco" v-model:number="preco" ></inputFloatNumber>
             </div>
+            <div class="input-group " v-if="!edicaoInativa">
+            <div class="custom-file">
+                    <label class="custom-file-label" for="inputGroupFile01">Importar de um XML?</label>
+                    <input type="file" ref="file" class="custom-file-input" v-on:change="carregaArquivo()" accept=".xml,.XML,.Xml">
+                </div>
+            </div>
             <ul>
                 <li v-if="tamanhoDescricaoInvalida"> Descricao deve conter no minimo 3 caracteres</li>
                 <li v-if="precoMinimoInvalido">Preco deve ser maior que zero</li>
                 <li v-if="marcaInvalida">Selecione uma marca</li>
                 <li v-if="fornecedorInvalido">Selecione um fornecedor</li>
+                <li v-if="extensaoInvalida">Extensão inválida</li>
             </ul>
         </div>
     </div>
@@ -157,5 +220,11 @@ export default{
     }
     select{
         margin: 2px;
+        max-width: 200px;
     }
+    input{
+        margin: 2px;
+        max-width: 200px;
+    }
+
 </style>

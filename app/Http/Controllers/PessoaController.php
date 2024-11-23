@@ -27,7 +27,15 @@ class PessoaController extends Controller
     public function inserirPessoa(Request $request)
     {
         $var = $request->all();
-        $var = response()->json(Pessoa::create(['descricao'=> $var['descricao'],'fornecedor'=>$var['fornecedor']]));
+        $var = response()->json(Pessoa::create(
+            [
+                'descricao'=> $var['descricao'],
+                'fornecedor'=>$var['fornecedor'],
+                'cpf_cnpj'=>$var['cpf_cnpj'],
+                'idade'=>$request['idade'],
+                'sexo'=>$request['sexo']
+            ]));
+
         return $var;
     }
 

@@ -2,6 +2,8 @@
 import Layout from '../shared/Layout.vue'
 import rotas from '../Assets/ConfigFiles/apiconfig'
 import modalRetornoIncorreto from '../modal/modalRetornoIncorreto.vue';
+import CpfCNPJinput from '../utils/CpfCNPJinput.vue';
+import inputIntNumber from '../utils/inputIntNumber.vue'
 
 export default{
     layout: Layout,
@@ -15,12 +17,23 @@ export default{
             edicaoInativa: true,
             nomeInvalido: false,
             modalAtivo: false,
-            modalMensagem: {titulo: 'Erro ao processar registro', mensagem :'Não foi possível processar registro'}
-       
+            modalMensagem: {titulo: 'Erro ao processar registro', mensagem :'Não foi possível processar registro'},
+            cpf: this.pessoa.cpf_cnpj,
+            sexo: this.pessoa.sexo,
+            idade: this.pessoa.idade,
+            idadeInvalida: false,
+            sexoInvalido: false,
+            cpf_cnpj_invalido: false 
+
         }
     },
     components:{
-        modalRetornoIncorreto
+        modalRetornoIncorreto,
+        CpfCNPJinput,
+        inputIntNumber
+    },
+    created(){
+        console.log(this.pessoa)
     },
     methods: {
         salvaAlteracoes(){
@@ -29,7 +42,11 @@ export default{
                 const csrfToken = document.getElementsByName("_token")[0].value
                 let obj = this
                 var request = new XMLHttpRequest()
-                let data = JSON.stringify({descricao: this.nome, fornecedor: this.fornecedor})
+                let data = JSON.stringify({descricao: this.nome, 
+                    fornecedor: this.fornecedor, 
+                    idade: this.idade, 
+                    sexo: this.sexo})
+
                 request.open('POST',rotas.pessoas.editaPessoa(this.pessoa.id),true)
                 request.setRequestHeader('X-CSRF-TOKEN',csrfToken)
                 request.setRequestHeader("Content-Type","application/json")
@@ -53,6 +70,8 @@ export default{
             this.fornecedor = this.pessoa.fornecedor
             this.edicaoInativa = true
             this.nomeInvalido = false
+            this.sexo = 0
+            this.idade = ''
         },
         excluiCadastro(){
 
@@ -84,20 +103,36 @@ export default{
                 request.send()
         },
         validaDados(){
+
+            let retorno = true
+
             if(this.nome.length <= 2)
             {
                 this.nomeInvalido = true
-                return false
+                retorno =  false
             }
 
-            if(this.nome == this.pessoa.nome && this.fornecedor == this.pessoa.fornecedor)
+            if(isNaN(parseInt(this.idade)))
             {
-                this.cancelaEdicao()
-                return false
+                this.idadeInvalida = true
+                retorno =  false
             }
 
-            return true
+            if(this.sexo === '0')
+            {
+                this.sexoInvalido = true
+                retorno =  false
+            } 
+
+            if(this.cpf.length != 14 && this.cpf.length != 11 || this.cpf == null)
+            {
+                this.cpf_cnpj_invalido = true
+                retorno =  false
+            }
+
+            return retorno
         },
+    
     }
 }
 </script>
@@ -145,9 +180,24 @@ export default{
         <div class="card-body text-dark">
             <h5 class="card-title"><input type="checkbox" v-bind:disabled="edicaoInativa" v-model="fornecedor">Fornecedor</h5>
             <h5 class="card-title">Nome<input type="text" class="form-control" v-bind:readonly="edicaoInativa" v-model="nome"></h5>
+            <div>
+                <h6>Sexo</h6>
+                <select v-model="sexo" :disabled="edicaoInativa">
+                    <option disabled value="0">Selecione um sexo</option>
+                    <option :value="'M'">Masculino</option>
+                    <option :value="'F'">Feminino</option>
+                </select>
+                <h5>CPF/CNPJ</h5>
+                <CpfCNPJinput :disable="edicaoInativa" :number="this.cpf"></CpfCNPJinput>
+                    <h5>Idade</h5>
+                    <inputIntNumber :number="idade" :disable="edicaoInativa" @atualiza="(args)=>{this.idade = args}"></inputIntNumber>
+            </div>
         </div>
         <ul>
             <li v-if="nomeInvalido">Nome precisa ter no minimo 3 caracteres</li>
+            <li v-if="idadeInvalida">Idade inválida</li>
+            <li v-if="cpf_cnpj_invalido">Cpf invalido</li>
+            <li v-if="sexoInvalido">Selecione o sexo do cliente</li>
         </ul>
     </div>
 </template>

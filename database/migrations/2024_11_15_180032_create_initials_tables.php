@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('descricao');
             $table->integer('fornecedor');
+            $table->char('sexo');
+            $table->integer('idade');
+            $table->string('cpf_cnpj',14);
             $table->timestamps();
         });
 
@@ -32,6 +35,7 @@ return new class extends Migration
             $table->foreign('id_fornecedor')->references('id')->on('cliente_fornecedor');
             $table->integer('id_marca');
             $table->foreign('id_marca')->references('id')->on('marcas');
+            $table->boolean('ativo');
             $table->timestamps();
         });
 
@@ -39,6 +43,7 @@ return new class extends Migration
             $table->id();
             $table->integer('id_cliente');
             $table->foreign('id_cliente')->references('id')->on('cliente_fornecedor');
+            $table->date('data_venda');
             $table->timestamps();
         });
 
@@ -46,6 +51,10 @@ return new class extends Migration
             $table->id();
             $table->integer('id_produto');
             $table->foreign('id_produto')->references('id')->on('produtos');
+            $table->integer('id_entrada');
+            $table->foreign('id_entrada')->references('id')->on('entrada_mercadorias');
+            $table->integer('quantidade');
+            $table->float('preco');
             $table->timestamps();
         });
 
@@ -60,6 +69,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('entrada_mercadorias', function (Blueprint $table) {
+            $table->id();
+            $table->integer('id_fornecedor');
+            $table->foreign('id_fornecedor')->references('id')->on('cliente_fornecedor');
+            $table->date('data_compra');
+            $table->timestamps();
+        });
        
     }
 
@@ -74,5 +90,6 @@ return new class extends Migration
         Schema::dropIfExists('pedido');
         Schema::dropIfExists('produtos');
         Schema::dropIfExists('cliente_fornecedor');
+        Schema::dropIfExists('entrada_mercadorias');
     }
 };

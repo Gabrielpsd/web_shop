@@ -35,7 +35,7 @@ export default {
     <div >
         <div class="grid">
             <adicionar @adicionar="(arg)=>adicionarMarca(arg)"></adicionar>
-            <marcaCard :marca='marca' v-for="marca in marcas" @deletaMarca="(arg)=>deletaMarca(arg)" ></marcaCard>
+            <marcaCard :marca='marca' v-for="marca in marcas" @deletaMarca="(arg)=>deletaMarca(arg)" :key="marca.id"></marcaCard>
         </div>
     </div>
 </template>

@@ -10,7 +10,7 @@ import modalBloqueio from '../modal/modalBloqueio.vue';
 export default {
     layout:Layout,
     props: {
-        PedidoBD: Object,
+        Entrada: Object,
         ProdutosBD: Array,
         ProdutosCadastrados: Array
     },
@@ -22,7 +22,7 @@ export default {
     },
     data(){
         return{
-            Pedido:this.PedidoBD[0],
+            Pedido:this.Entrada[0],
             Produtos: this.ProdutosBD,
             listaDelecoes: [],
             listaInsercoes: [],
@@ -79,6 +79,7 @@ export default {
 
         },
         salvaAlteracoes(){
+
             const csrfToken = document.getElementsByName("_token")[0].value
             this.telaDesbloqueada = false
 
@@ -87,7 +88,7 @@ export default {
             /* adiciona produtos */ 
             if(this.listaInsercoes.length > 0)
             {
-                request.open('POST',rotas.pedidos.adicionar(this.PedidoBD[0].id),false)
+                request.open('POST',rotas.entradas.adicionar(this.Entrada[0].id),false)
                 request.setRequestHeader('X-CSRF-TOKEN',csrfToken)
                 request.setRequestHeader("Content-Type","application/json")
                 request.send(JSON.stringify(this.listaInsercoes))    
@@ -96,7 +97,7 @@ export default {
             
             if(this.listaDelecoes.length > 0)
             {
-                request.open('POST',rotas.pedidos.remover(this.PedidoBD[0].id),false)
+                request.open('POST',rotas.entradas.remover(this.Entrada[0].id),false)
                 request.setRequestHeader('X-CSRF-TOKEN',csrfToken)
                 request.setRequestHeader("Content-Type","application/json")
                 request.send(JSON.stringify(this.listaDelecoes))
@@ -105,13 +106,13 @@ export default {
             
             if(this.listaAlteracoes.length > 0)
             {
-                request.open('POST',rotas.pedidos.editar(this.PedidoBD[0].id),false)
+                request.open('POST',rotas.entradas.editar(this.Entrada[0].id),false)
                 request.setRequestHeader('X-CSRF-TOKEN',csrfToken)
                 request.setRequestHeader("Content-Type","application/json")
                 request.send(JSON.stringify(this.listaAlteracoes))
             }
 
-            router.visit(rotas.pedidos.lista, {
+            router.visit(rotas.entradas.lista, {
                                                     method: 'get',
                                                     data: {},
                                                     })
@@ -121,7 +122,7 @@ export default {
         situacaoModal(int){
             if(int == 1 )
             {
-                router.visit(rotas.pedidos.lista, {
+                router.visit(rotas.entradas.lista, {
                                                     method: 'get',
                                                     data: {},
                                                     })
@@ -157,8 +158,8 @@ export default {
     </div>
     <div class="pedidos rounded border border-secondary " :class="{bloqueado : !telaDesbloqueada}">
         <div class="dadosPedido">
-            <h3>Cliente:</h3>
-            <p>{{ Pedido.cliente }}</p>
+            <h3>Fornecedor:</h3>
+            <p>{{ Pedido.fornecedor }}</p>
             <h3>TotalPedido</h3>
             <p> R$ : {{valorTotal().toFixed(2)}}</p>
         </div>

@@ -6,12 +6,12 @@
             Link
         },
         methods: {
-            isUrl(...urls) {
-            let currentUrl = this.$page.url.substr(1)
+            isUrl(urls) {
+            /* let currentUrl = this.$page.url.substr(1)
             if (urls[0] === '') {
                 return currentUrl === ''
             }
-            return urls.filter((url) => currentUrl.startsWith(url)).length
+            return urls.filter((url) => currentUrl.startsWith(url)).length */
             },
         },
     }
@@ -26,9 +26,6 @@
         <div class="collapse navbar-collapse rounded" id="navbarNav">
             <ul class="navbar-nav">
             <li class="nav-item">
-                <Link class="nav-link" :class="isUrl('/') ? 'active' : '' " href="/">DashBoard</Link>
-            </li>
-            <li class="nav-item">
                 <Link class="nav-link" :class="isUrl('produtos') ? 'active' : '' " href="/produtos">Produtos</Link>
             </li>
             <li class="nav-item">
@@ -41,7 +38,7 @@
                 <Link class="nav-link" :class="isUrl('pedidos') ? 'active' : '' " href="/pedidos">Pedidos</Link>
             </li>
             <li class="nav-item">
-                <Link class="nav-link" :class="isUrl('entradaMercadoria') ? 'active' : '' " href="/entradaMercadoria">+ Mercadoria</Link>
+                <Link class="nav-link" :class="isUrl('entradas') ? 'active' : '' " href="/entradas">+ Mercadoria</Link>
             </li>
             </ul>
         </div>

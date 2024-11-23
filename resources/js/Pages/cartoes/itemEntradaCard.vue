@@ -1,14 +1,13 @@
 <script>
 import Layout from '../shared/Layout.vue'
 import rotas from '../Assets/ConfigFiles/apiconfig'
-import {router} from '@inertiajs/vue3';
 import {Link} from '@inertiajs/vue3';
 import modalConfirmaExclusao from '../modal/modalConfirmaExclusao.vue';
 
 export default{
     layout: Layout,
     props: {
-        pedido: Object
+        entrada: Object
     },
     components:{
         Link,
@@ -16,13 +15,12 @@ export default{
     },
     data(){
         return{
-            exclusaoAtiva: false 
+            exclusaoAtiva: false
         }
     },
     methods: {
         urlEdicao(){
-
-            return rotas.pedidos.detalhe(this.pedido.id)
+            return rotas.entradas.detalhe(this.entrada.id)
         },
         excluiCadastro(arg){
             if(arg == false)
@@ -37,20 +35,22 @@ export default{
             const csrfToken = document.getElementsByName("_token")[0].value
             var request = new XMLHttpRequest()
             let obj = this
-            request.open('DELETE',rotas.pedidos.excluir(this.pedido.id),true)
+            request.open('DELETE',rotas.entradas.excluir(this.entrada.id),true)
             request.setRequestHeader('X-CSRF-TOKEN',csrfToken)
             request.setRequestHeader("Content-Type","application/json")
-            let id = obj.pedido.id 
+
             request.onload = function(){
                 if(this.readyState == XMLHttpRequest.DONE)
                     if(this.status == 200)
                     {
                         obj.exclusaoAtiva = false
-                        obj.$emit('exclui',id)
+                        obj.$emit('exclui',obj.entrada.id)
                     }
             } 
+
             request.send()
         }
+
     }
 }
 </script>
@@ -59,8 +59,8 @@ export default{
     <modalConfirmaExclusao v-if="exclusaoAtiva" @respostaModal="(arg)=>excluiCadastro(arg)"></modalConfirmaExclusao>
     <div class="card border-dark mb-3" style="max-width: 18rem;" >
         <div class="card-header spacing">
-            Pedido {{ pedido.id }}
-            <Link type="button" class="btn btn-secondary btn-sm" :href="urlEdicao()">Visualizar Pedidos</Link>
+            Pedido {{ entrada.id }}
+            <Link type="button" class="btn btn-secondary btn-sm" :href="urlEdicao()">Visualizar entrada</Link>
             <button  class="btn btn-outline-danger" @click="this.exclusaoAtiva = true" width="10px" height="10px">
                 <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
@@ -69,13 +69,13 @@ export default{
             </button>
         </div>
         <div class="card-body text-dark">
-        <h5 class="card-title">Cliente: {{pedido.cliente}}</h5>
+        <h5 class="card-title">Fornecedor:{{entrada.fornecedor}}</h5>
         <div class="total">
-            <p class="card-text">Total: R${{ parseFloat(pedido.valor_total).toFixed(2) }}</p>    
+            <p class="card-text">Total: R${{ parseFloat(entrada.valor_total).toFixed(2) }}</p>
         </div>
         <div>
-            <label for="Data">Data Venda</label>
-            <input id="Data" type="text" :value="new Date(pedido.data_venda).toLocaleDateString('pt-BR', {timeZone: 'UTC'})" disabled/>
+            <label for="Data">Data Compra</label>
+            <input id="Data" type="text" :value="new Date(entrada.data_compra).toLocaleDateString('pt-BR', {timeZone: 'UTC'})" disabled/>
         </div>
         </div>
     </div>

@@ -1,12 +1,12 @@
 <script>
     export default{
         props:{
-            number: Number
+            number: Number,
+            disable: Boolean
         },
         methods:{
             updateNumber(){
-                this.$emit('update:number',parseInt(this.inputNumber))
-                this.$emit('atualiza')
+                this.$emit('atualiza',parseInt(this.inputNumber))
             },
             verificaDigito(key) {
                 if(key.code == "Tab")
@@ -38,6 +38,14 @@
             return{
                 inputNumber: this.number
             }
+        },
+        created(){
+            if(this.number)
+            {
+                this.inputNumber = this.number
+            }
+            else 
+                this.inputNumber = ''
         }
     }
 
@@ -45,7 +53,7 @@
 
 <template>
      <label>
-        <input data-slots="_" size="5" :placeholder="inputNumber" :value="inputNumber" @input="updateNumber" v-on:keydown="verificaDigito">
+        <input data-slots="_" size="5" :placeholder="inputNumber" :value="inputNumber" @input="updateNumber" v-on:keydown="verificaDigito" :disabled="disable">
     </label>
 </template>
 

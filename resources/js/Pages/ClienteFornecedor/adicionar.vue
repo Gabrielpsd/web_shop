@@ -1,6 +1,8 @@
 <script>
 import Layout from '../shared/Layout.vue'
 import rotas from '../Assets/ConfigFiles/apiconfig'
+import CpfCNPJinput from '../utils/CpfCNPJinput.vue';
+import inputIntNumber from '../utils/inputIntNumber.vue'
 
 export default{
     layout: Layout,
@@ -10,51 +12,84 @@ export default{
             fornecedor: false,
             edicaoInativa: true,
             tamanhoNomeInvalido: false,
+            cpf_cnpj: '',
+            cpfInvalido: false,
+            sexo: 0,
+            idade: ''
           }
+    },
+    components:{
+        CpfCNPJinput,
+        inputIntNumber
     },
     methods: {
         salvaAlteracoes(){
-
             if(this.validacoes())
             {
+                console.log("vou requisitar")
                 let obj = this
                 const csrfToken = document.getElementsByName("_token")[0].value
                 var request = new XMLHttpRequest()
                 
-                let pessoa = {'descricao':this.nome, 'fornecedor': this.fornecedor}
+                let pessoa = JSON.stringify({'descricao':this.nome, 
+                                            'fornecedor': this.fornecedor,
+                                            'cpf_cnpj': this.cpf_cnpj,
+                                            'idade': this.idade,
+                                            'sexo': this.sexo})
+                console.log(pessoa)
                 request.open('POST',rotas.pessoas.inserirPessoa,true)
                 request.setRequestHeader("Content-Type","application/json")
-                request.setRequestHeader("Access-Control-Allow-Origin",rotas.BASE_URL)
                 request.setRequestHeader('X-CSRF-TOKEN',csrfToken)
                 
                 request.onload = function(){
                     if(this.readyState == XMLHttpRequest.DONE)
                         if(this.status == 200)
+                        {
+                            console.log(this.responseText)
                             obj.$emit('adicionar',JSON.parse(this.responseText))
+                        }
                 } 
 
-                request.send(JSON.stringify(pessoa))
-
+                request.send(pessoa)
                 this.cancelaAdicao()
+
             } 
 
         },
         validacoes()
-        {
+        {   
+            let retorno = true
+            this.cpfInvalido = false
+            this.tamanhoNomeInvalido = false
+
             if(this.nome.length <= 3)
             {
                 this.tamanhoNomeInvalido = true
-                return false
+                retorno = false
             }
 
-            return true
+            console.log(this.cpf_cnpj)
+            if(this.cpf_cnpj.length != 14 && this.cpf_cnpj.length != 11)
+            {
+                console.log("entrei aqui ")
+                this.cpfInvalido = true
+                retorno = false
+            }
+
+            return retorno 
         },
+
         cancelaAdicao(){
             this.nome = ''
             this.fornecedor = false
             this.edicaoInativa = true,
             this.tamanhoNomeInvalido = false
+            this.cpf_cnpj = ''
         },
+        atualizaCPFCNPJ(valor)
+        {
+            this.cpf_cnpj = valor
+        }
     }
 }
 </script>
@@ -86,10 +121,22 @@ export default{
         <div class="card-body text-dark" >
             <h5 class="card-title"><input type="checkbox" v-bind:disabled="edicaoInativa" v-model="fornecedor">Fornecedor</h5>
             <h5 class="card-title">Nome<input type="text" class="form-control" v-bind:readonly="edicaoInativa" v-model="nome" :class="{campoInvalido: tamanhoNomeInvalido}"></h5>
-            
+            <div>
+                <h6>Sexo</h6>
+                <select v-model="sexo" :disabled="edicaoInativa">
+                    <option disabled value="0">Selecione um sexo</option>
+                    <option :value="'M'">Masculino</option>
+                    <option :value="'F'">Feminino</option>
+                </select>
+                <h5>CPF/CNPJ</h5>
+                <CpfCNPJinput :disable="edicaoInativa" :number="this.cpf" @atualiza="(arg)=>this.cpf_cnpj = arg"></CpfCNPJinput>
+                    <h5>Idade</h5>
+                    <inputIntNumber :disable="edicaoInativa"></inputIntNumber>
+            </div> 
         </div>
         <ul v-if="tamanhoNomeInvalido">
             <li v-if="tamanhoNomeInvalido">Nome deve conter no minimo 3 caracteres</li>
+            <li v-if="cpfInvalido">CFP/CNPJ incompleto</li>
         </ul>
     </div>
 </template>
