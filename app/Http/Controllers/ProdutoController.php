@@ -13,16 +13,21 @@ class ProdutoController extends Controller
 {
     public function index(){
         $sql = <<< TODOSPRODUTOS
-                select 
-                    produtos.*,
-                    cliente_fornecedor.descricao as fornecedor,
-                    marcas.descricao as marca
-                from 
-                    produtos
-                join cliente_fornecedor on
-                    cliente_fornecedor.id = produtos.id_fornecedor
-                join marcas on 
-                    marcas.id = produtos.id_marca
+            select 
+                produtos.*,
+                cliente_fornecedor.descricao as fornecedor,
+                marcas.descricao as marca,
+                (select 
+                    coalesce((select SUM(entrada_produtos.quantidade) from entrada_produtos where entrada_produtos.id_produto = produtos.id),0)
+                    - 
+                    coalesce((select SUM(produtos_pedido.quantidade) from produtos_pedido where produtos_pedido.id_produto = produtos.id),0)
+                ) as saldo_item
+            from 
+                produtos
+            join cliente_fornecedor on
+                cliente_fornecedor.id = produtos.id_fornecedor
+            join marcas on 
+                marcas.id = produtos.id_marca
         TODOSPRODUTOS;
 
         $produtos = DB::select($sql);

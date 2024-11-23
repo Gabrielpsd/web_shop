@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://799b-170-0-169-88.ngrok-free.app'
+export const BASE_URL = 'http://localhost:8000'
 export const PRODUTOS = `${BASE_URL}/produtos`
 export const PRODUTOSAPI = `${BASE_URL}/api/produtos`
 export const PEDIDOS = `${BASE_URL}/pedidos`

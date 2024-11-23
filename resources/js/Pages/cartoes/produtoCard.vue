@@ -30,7 +30,8 @@ export default{
             marca: this.produto.id_marca,
             modalMensagem: {titulo: 'Erro ao processar registro', mensagem :'Não foi possível processar registro'},
             itemAtivo: this.produto.ativo,
-            exclusaoAtiva: false
+            exclusaoAtiva: false,
+            saldo_item: this.produto.saldo_item
         }
     },
     methods: {
@@ -178,6 +179,10 @@ export default{
             <div v-if="!edicaoInativa">
                 Preço R$: <inputFloatNumber  :number="preco" v-model:number="preco"></inputFloatNumber>
             </div>
+            <label>
+                Saldo item
+                <input data-slots="_" size="5" :placeholder="saldo_item"  disabled>
+            </label>
         </div>
     </div>
 </template>
