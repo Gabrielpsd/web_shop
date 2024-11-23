@@ -36,7 +36,6 @@ export default{
                                             'cpf_cnpj': this.cpf_cnpj,
                                             'idade': this.idade,
                                             'sexo': this.sexo})
-                console.log(pessoa)
                 request.open('POST',rotas.pessoas.inserirPessoa,true)
                 request.setRequestHeader("Content-Type","application/json")
                 request.setRequestHeader('X-CSRF-TOKEN',csrfToken)
@@ -45,7 +44,6 @@ export default{
                     if(this.readyState == XMLHttpRequest.DONE)
                         if(this.status == 200)
                         {
-                            console.log(this.responseText)
                             obj.$emit('adicionar',JSON.parse(this.responseText))
                         }
                 } 

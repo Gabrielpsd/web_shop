@@ -21,7 +21,6 @@ export default{
         salvaAlteracoes(){
             if(this.validacoes())
             {
-                let obj = this
                 const csrfToken = document.getElementsByName("_token")[0].value
                 var request = new XMLHttpRequest()
                 

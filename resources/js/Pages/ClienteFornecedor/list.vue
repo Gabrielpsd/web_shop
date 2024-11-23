@@ -90,7 +90,6 @@ export default {
             }).filter((item)=>{
                 if(this.fornecedor === '0' )
                     return true
-                console.log("item:", item.fornecedor,"Selecionao:",this.fornecedor)
                 return (item.fornecedor == this.fornecedor)     
             }).filter((item)=>{
                 if(this.sexo == '0')

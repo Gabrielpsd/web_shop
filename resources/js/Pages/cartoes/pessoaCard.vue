@@ -32,9 +32,6 @@ export default{
         CpfCNPJinput,
         inputIntNumber
     },
-    created(){
-        console.log(this.pessoa)
-    },
     methods: {
         salvaAlteracoes(){
             if(this.validaDados())

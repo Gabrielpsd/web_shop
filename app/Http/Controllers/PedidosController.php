@@ -57,11 +57,11 @@ class PedidosController extends Controller
 
     public function  inserirPedido(Request $request){
         $request = $request->all();
-        dump($request);
+
         $marcas  = Pedidos::create([
             'id_cliente'=>$request['id_cliente'],
             'data_venda'=>$request['data_venda']]);
-        dump($marcas);
+
 
         return response()->json($marcas);
     }

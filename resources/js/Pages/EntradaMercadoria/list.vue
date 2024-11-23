@@ -87,7 +87,6 @@ export default {
     computed:{
         filtraBusca: function(){
             let items =  this.Entradas.filter((item)=>{
-                console.log(item)
                 return ((item.id+'').toLowerCase().indexOf(this.id_lancamento) > -1) 
             })
             .filter((item)=>{

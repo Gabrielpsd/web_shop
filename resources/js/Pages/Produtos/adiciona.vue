@@ -42,7 +42,7 @@ export default{
                 request.setRequestHeader('X-CSRF-TOKEN',csrfToken)
                 request.onload= function()
                 {
-                    console.log("Realizei requisição")
+
                     if(this.readyState == XMLHttpRequest.DONE)
                         if(this.status == 200)
                             obj.$emit('adicionar',JSON.parse(this.responseText))
@@ -113,8 +113,7 @@ export default{
             }
             const csrfToken = document.getElementsByName("_token")[0].value
 
-            /* this.value =  ROTAARQUIVOS + this.$refs.file.files[0].name */
-            console.log(this.$refs.file.files[0].name)
+
             let data = new FormData()
 
             data.append('file',this.$refs.file.files[0])
@@ -125,7 +124,6 @@ export default{
 
         cadastraProdutos(data){
 
-           /*  console.log(data.data.produtos) */
             let fornecedor = this.Fornecedores.find((item)=>item.cpf_cnpj == data.data.Fornecedor.CPF_CNPJ[0])
 
             if(fornecedor)

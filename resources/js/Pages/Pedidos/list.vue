@@ -77,7 +77,6 @@ export default {
     },
     methods:{
         excluiRegistro(id){
-            console.log("Vou excluir")
             this.pedidos = this.pedidos.filter((data)=>data.id != id)
         },
         geraCor(){

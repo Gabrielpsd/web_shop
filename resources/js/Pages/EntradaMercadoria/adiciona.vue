@@ -15,7 +15,7 @@ export default{
             edicaoInativa: true,
             fornecedorInvalido: false,
             extensaoInvalida: false,
-            dataOriginal: '',
+            dataOriginal: new Date(),
             data_compra: new Date().toLocaleDateString('pt-BR', {timeZone: 'UTC'}),
           }
     },
@@ -37,6 +37,8 @@ export default{
                         if(this.status == 200)
                         {
                             let page = JSON.parse(this.responseText)
+                            console.log(this.responseText)
+                            router.get(rotas.entradas.detalhe(page))
                         }
                 } 
 
@@ -68,7 +70,7 @@ export default{
             this.data_compra = new Date(arg.originalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})
         }
          
-    }
+    },
 }
 </script>
 
