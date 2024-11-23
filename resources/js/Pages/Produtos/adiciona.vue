@@ -195,7 +195,7 @@ export default{
                 Preço R$: <input placeholder="0,00" size="5">
             </div>
             <div v-if="!edicaoInativa">
-                Preço R$: <inputFloatNumber  :number="preco" v-model:number="preco" ></inputFloatNumber>
+                Preço R$: <inputFloatNumber  :number="preco" @atualiza="(args)=>this.preco = args" ></inputFloatNumber>
             </div>
             <div class="input-group " v-if="!edicaoInativa">
             <div class="custom-file">
