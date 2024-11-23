@@ -1,7 +1,9 @@
  
- # Agenda APP
- Uma ferramenta de agendamento de tarefas
- 
+ # WebShop
+Uma loja virtual funcional com todas as operações(Entrada, saída, cadastros e deleções).
+
+ ![2024-11-23_15h41_31](https://github.com/user-attachments/assets/347dac79-14c5-45fe-9ee4-ac9272f5c277)
+
  ## Configuração do ambiente
  Programa construido orientado a micro-serviços, para isso algumas configurações precisam ser feitas no ambiente para uso da ferramenta. 
  
@@ -61,8 +63,6 @@ Feito todas as intalações execute o seguinte comando:
 ```
  npm run build
  ```
-
-Confira a rota que aparecerá após a execução do comando. 
 
 ## Stacks
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)]()
