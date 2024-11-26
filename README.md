@@ -4,6 +4,9 @@ Uma loja virtual funcional com todas as operações(Entrada, saída, cadastros e
 
  ![2024-11-23_15h41_31](https://github.com/user-attachments/assets/347dac79-14c5-45fe-9ee4-ac9272f5c277)
 
+## Modelo do banco de dados 
+![Banco_Empresa](https://github.com/user-attachments/assets/793efae7-0281-451c-a8cb-3fc500f3345e)
+
  ## Configuração do ambiente
  Programa construido orientado a micro-serviços, para isso algumas configurações precisam ser feitas no ambiente para uso da ferramenta. 
  
@@ -32,6 +35,8 @@ Uma loja virtual funcional com todas as operações(Entrada, saída, cadastros e
   php artisan migrate
 ```
  !! Caso o erro " could not find driver (Connection: pgsql, SQL: select * from information_schema.tables where table_catalog = agenda and table_schema = public and table_name = migrations and table_type = 'BASE TABLE')" ocorra va para o arquivo php.ini(localizado onde esta instalado o PHP). No arquivo procure por ";extension=pdo_pgsql" remove os dois pontos(";") que antecede a linha. E execute o comando "php artisan migrate" novamente. 
+
+5º - no projeto há um arquivo "PopulaBanco.sql" que contém alguns comandos de inserção para popular o banco de dados.
 
   
  O programa foi construido como SGBD o postgres SQL, porém é possível utilizar outro banco de dados 
