@@ -10,7 +10,7 @@ use Inertia\Inertia;
 
 class PedidosController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
         $sql = <<< sql
             select
                 pedidos.id,
@@ -25,6 +25,12 @@ class PedidosController extends Controller
         sql;
 
         $pedidos = DB::select($sql);
+
+        if($request->query('JSON') == true)
+        {   
+            dump("entrei aqui");
+            return response()->json($pedidos);
+        }
 
         $sql = <<< CLIENTES
             select 
@@ -66,7 +72,7 @@ class PedidosController extends Controller
         return response()->json($marcas);
     }
 
-    public function editarPedido(string $id)
+    public function editarPedido(Request $request,string $id)
     {
         $sql = <<<SQL
              select
@@ -100,6 +106,14 @@ class PedidosController extends Controller
         SQL;
 
         $Produtos = DB::select($sql,[$id]);
+
+        if($request->query('JSON') == true)
+        {   
+            $pedido['produtos'] = $Produtos;
+
+            return response()->json($pedido);
+        }
+
         $produtosCadastrados = Produto::all();
 
         return Inertia::render('Pedidos/edit',

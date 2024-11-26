@@ -10,12 +10,19 @@ use Inertia\Inertia;
 
 class PessoaController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
         $sql = <<< TODOSPRODUTOS
                 select * from cliente_fornecedor
         TODOSPRODUTOS;
 
         $response = DB::select($sql);
+
+        if($request->query('JSON') == true)
+        {   
+            return response()->json($response);
+        }
+
+        
         return Inertia::render('ClienteFornecedor/list',
         [
             'ClienteFornecedor' => $response

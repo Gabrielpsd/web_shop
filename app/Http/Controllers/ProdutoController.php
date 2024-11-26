@@ -76,8 +76,13 @@ class ProdutoController extends Controller
         return response()->json($pessoa);
     }
 
-    public function  todasMarcas(){
+    public function  todasMarcas(Request $request){
         $marcas  = Marca::all();
+
+        if($request->query('JSON') == true)
+        {   
+            return response()->json($marcas);
+        }
 
         return Inertia::render('Marcas/list',[
             'Marcas'=>$marcas

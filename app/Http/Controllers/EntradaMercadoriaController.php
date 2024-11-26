@@ -9,7 +9,7 @@ use Inertia\Inertia;
 
 class EntradaMercadoriaController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
         $sql = <<< sql
             select
                 entrada_mercadorias.id,
@@ -23,6 +23,11 @@ class EntradaMercadoriaController extends Controller
         sql;
 
         $entradas = DB::select($sql);
+
+        if($request->query('JSON') == true)
+        {   
+            return response()->json($entradas);
+        }
 
         $sql = <<< FORNECEDORES
             select 
@@ -60,7 +65,7 @@ class EntradaMercadoriaController extends Controller
         return response()->json($response);
     }
 
-    public function detalheEntrada(string $id)
+    public function detalheEntrada(Request $request,string $id)
     {
         $sql = <<<SQL
              select
@@ -93,6 +98,12 @@ class EntradaMercadoriaController extends Controller
         SQL;
 
         $Produtos = DB::select($sql,[$id]);
+
+        if($request->query('JSON') == true)
+        {   
+            $entrada['produtos'] = $Produtos;
+            return response()->json($entrada);
+        }
 
         $produtosCadastrados = Produto::all();
 
