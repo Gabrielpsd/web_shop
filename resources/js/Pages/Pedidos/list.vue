@@ -152,10 +152,10 @@ export default {
     <div >
         <div class="filtros">
             <h4>Filtros</h4>
-            <input v-model="id_lancamento" placeholder="ID lancamento" />
-            <input v-model="id_cliente" placeholder="ID cliente" />
+            <input v-model="id_lancamento" placeholder="ID lancamento" size="15"/>
+            <input v-model="id_cliente" placeholder="ID cliente" size="15"/>
             <input v-model="cliente" placeholder="Cliente" />
-            <select v-model="sexo">
+            <select v-model="sexo" >
                 <option  :value="'0'">Sexo</option>
                 <option  :value="'M'">Masculino</option>
                 <option  :value="'F'">Feminino</option>
@@ -236,23 +236,23 @@ export default {
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
-}
-
-.filtros select {
-    width: 100%;
-    max-width: 250px;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 
 .chartArea {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     gap: 10px;
+    background-color: rgb(241, 241, 241);
+    padding: 3px;
 }
 
 .chart {
-    width: 100%;
-    max-width: 400px;
+    width: 80%;
+    max-width: 350px;
 }
 
 .device-view {

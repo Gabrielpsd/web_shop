@@ -56,5 +56,3 @@
         <input data-slots="_" size="5" :placeholder="inputNumber" :value="inputNumber" @input="updateNumber" v-on:keydown="verificaDigito" :disabled="disable">
     </label>
 </template>
-
-<style scoped></style>

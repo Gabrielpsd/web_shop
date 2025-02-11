@@ -186,6 +186,9 @@ export default {
 </template>
 
 <style scoped>
+@media (min-width: 769px)
+{
+
     .pedidos{
         display: flex;
         flex-direction: row;
@@ -196,6 +199,7 @@ export default {
         align-self: center;
         padding: 10px;
     }
+}
     p{
         border-color: gray;
         margin: 4px;
@@ -216,17 +220,11 @@ export default {
         cursor: not-allowed; /* Change cursor to indicate unavailability */
         pointer-events: none; /* Disable all mouse events */
     }
-    .busy_dot{
-        height: 15px;
-        width: 15px;
-        background-color: red;
-        border-radius: 50%;
 
-    }
-    .free_dot{
-        height: 15px;
-        width: 15px;
-        background-color: green;
-        border-radius: 50%;
-    }
+@media (max-width: 768px) {
+*{
+    font-size: small;
+}
+}
+
 </style>

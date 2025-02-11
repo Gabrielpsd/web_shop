@@ -60,7 +60,10 @@ export default{
     <div class="card border-dark mb-3" style="max-width: 18rem;" >
         <div class="card-header spacing">
             Pedido {{ entrada.id }}
-            <Link type="button" class="btn btn-secondary btn-sm" :href="urlEdicao()">Visualizar entrada</Link>
+            <Link type="button" class="btn btn-secondary btn-sm computer-view" :href="urlEdicao()">Visualizar Pedidos</Link>
+            <Link type="button" class="btn btn-secondary btn-sm device-view" :href="urlEdicao()">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABVUlEQVR4nO2UMUsDQRCFU6TzMJrWk4ABD/9ECP4VtfIXWER/S8qEQBqJIAhibCy0sLCJYpFWRRPU8guDL3AOq3exCBZ5sHDMe/P2ZnZ2C4UF/jWAMrAPHAND4FNrqJhx5b8YF4EDYEw2xtIW85rHwFXK4BTYARJgSStRzLgpLCfOMq8AD0q4B2o5fqgGDJRjuZWfhBFwJ+EFsJLi1oEOMNLqWhUpvgScK9c8otAGTQlu0gK+zJ8DvX8xzv2g5Rqa3rwu4gOoOq4jzqZmTWfUU6zttFV5GOppoq/gYaCykbjYVWV4C+gb4vqhDRozbvAa0B+FNpi26B3YcAldcT21x8xPFGs57aYu4vcWuUO+tllPxRMdqMeTq2oZuA0ecmBMbeRKriVt67lWy5mvApe/jmngog1yXrRt4DHzomU8FbvAlqqM9L0HnM30VMzlsZvLc73AXDEBG+8c+C3rAPAAAAAASUVORK5CYII=" alt="visible--v1">
+            </Link>
             <button  class="btn btn-outline-danger" @click="this.exclusaoAtiva = true" width="10px" height="10px">
                 <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
@@ -91,18 +94,25 @@ export default{
         display: flex;
         justify-content: space-between;
     }
-    .busy_dot{
-        height: 15px;
-        width: 15px;
-        background-color: red;
-        border-radius: 50%;
+    input{
+    width: 100%;
+}
+.computer-view{
+    display: inline;
+}
 
-    }
-    .free_dot{
-        height: 15px;
-        width: 15px;
-        background-color: green;
-        border-radius: 50%;
+.device-view{
+    display: none;
+}
 
+@media (max-width: 768px) {
+
+    .computer-view{
+        display: none;
     }
+
+    .device-view{
+        display: inline;
+    }
+}
 </style>

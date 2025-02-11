@@ -72,13 +72,15 @@ export default{
         </button>
     </div>
     <p v-if="itemInvalido" style="color: red;">Selecione um item valido</p>
-    <select class="form-select margin" v-model="itemSelecionado" v-on:change="atualizaInformacaoSelecao" aria-label="Default select example">
-        <option value="0">Selecione um item</option>
-        <option v-for="produto in Produtos" :value="produto.id">{{produto.descricao}}</option>
-    </select>
+    <div class="margin">
+        <select class="form-select" v-model="itemSelecionado" v-on:change="atualizaInformacaoSelecao" aria-label="Default">
+            <option value="0">Selecione um item</option>
+            <option v-for="produto in Produtos" :value="produto.id">{{produto.descricao}}</option>
+        </select>
+    </div>
     <div class="outside ">
         <div class="fw-bold "></div>   
-            <div class="d-flex justify-content-between" :class="{bloqueado: this.itemSelecionado == 0}">
+            <div class="d-flex" :class="{bloqueado: this.itemSelecionado == 0}">
             <div class="rounded border border-secondary padding" >
                 Quantidade:
                 <inputIntNumber :number="quantidade" @atualiza="(args)=>atualizaQuantidade(args)" :key="itemSelecionado"></inputIntNumber>
@@ -117,10 +119,22 @@ export default{
         align-items: center;
     }
     .margin{
-        margin: 1%;
+        margin: 1px;
+        display: flex;
+        justify-content: center;
     }
     .bloqueado{
         cursor: not-allowed; /* Change cursor to indicate unavailability */
         pointer-events: none; /* Disable all mouse events */
+    }
+    select{
+        width: 80%;
+    }
+
+    @media(max-width: 758px)
+    {
+        *{
+            font-size: small ;
+        }
     }
 </style>

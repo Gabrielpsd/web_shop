@@ -187,6 +187,8 @@ export default {
 </template>
 
 <style scoped>
+@media (min-width: 769px)
+{
     .pedidos{
         display: flex;
         flex-direction: row;
@@ -197,6 +199,7 @@ export default {
         align-self: center;
         padding: 10px;
     }
+}
     p{
         border-color: gray;
         margin: 4px;
@@ -218,4 +221,10 @@ export default {
         pointer-events: none; /* Disable all mouse events */
     }
 
+
+    @media (max-width: 768px) {
+*{
+    font-size: small;
+}
+}
 </style>
