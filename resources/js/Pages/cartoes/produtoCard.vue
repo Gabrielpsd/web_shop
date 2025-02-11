@@ -188,12 +188,22 @@ export default{
 </template>
 
 <style scoped>
-     select{
+    input, select{
         margin: 2px;
         max-width: 200px;
+        width: 100%;
     }
-    input{
-        margin: 2px;
-        max-width: 200px;
+
+@media (max-width: 768px) {
+    *{
+        font-size: medium;
     }
+}
+
+@media (max-width: 480px) {
+    *{
+        font-size: medium;
+    }
+
+}
 </style>

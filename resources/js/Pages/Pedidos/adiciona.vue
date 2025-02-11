@@ -97,7 +97,11 @@ export default{
                 <option disabled value="0">Selecione um cliente</option>
                 <option v-for="cliente in this.Clientes" :value="cliente.id">{{cliente.descricao}}</option>
             </select>
-            <div>
+            <div class="device-view"> 
+                <input type="text" :value="this.data_venda" :disabled="true" size="10"/>
+                <input type="date" class="date" @input="(arg)=>this.formataData(arg)">
+            </div>
+            <div class="computer-view">
                 <input type="text" :value="this.data_venda" :disabled="true"/>
                 <input type="date" class="date" @input="(arg)=>this.formataData(arg)">
             </div>
@@ -109,6 +113,11 @@ export default{
 </template>
 
 <style scoped>
+select {
+    width: 100%;
+    max-width: 250px;
+    margin-bottom: 10px;
+}
     ul{
         color: red;
     }
@@ -118,5 +127,29 @@ export default{
     .date{
         height: 30px;
         width: 30px;
+    }
+
+    .computer-view {
+        display: inline;
+    }
+    .device-view {
+        display: none;
+    }
+    @media (max-width: 768px) {
+        .computer-view {
+            display: none;
+        }
+        .device-view {
+            display: inline;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .computer-view {
+            display: none;
+        }
+        .device-view {
+            display: inline;
+        }
     }
 </style>

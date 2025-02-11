@@ -91,10 +91,43 @@ export default{
 </template>
 
 <style scoped>
+select {
+    width: 100%;
+    max-width: 250px;
+    margin-bottom: 10px;
+}
     ul{
         color: red;
     }
     .campoInvalido{
         border-color: red;
+    }
+    .date{
+        height: 30px;
+        width: 30px;
+    }
+
+    .computer-view {
+        display: inline;
+    }
+    .device-view {
+        display: none;
+    }
+    @media (max-width: 768px) {
+        .computer-view {
+            display: none;
+        }
+        .device-view {
+            display: inline;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .computer-view {
+            display: none;
+        }
+        .device-view {
+            display: inline;
+        }
     }
 </style>

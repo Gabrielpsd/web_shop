@@ -41,44 +41,94 @@ export default {
 </template>
 
 <style scoped>
-    pessoaCard {
-        margin: 1px;
-    }
-    .grid{
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        margin: 0 auto;
-        width: 80%;
-    }
-    h2{
-      text-align: center;
-      margin-top: 50px;
-      margin-bottom: 50px;  
-    }
-    .busy_dot{
-        height: 20px;
-        width: 20px;
-        background-color: red;
-        border-radius: 50%;
-        padding: 10px;
+   .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    margin: 0 auto;
+    width: 90%;
+    padding: 20px;
+    gap: 10px;
+}
 
-    }
-    .free_dot{
-        height: 20px;
-        width: 20px;
-        background-color: green;
-        border-radius: 50%;
-        padding: 10px;
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
 
+.filtros select {
+    width: 100%;
+    max-width: 250px;
+}
+
+.chartArea {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.chart {
+    width: 100%;
+    max-width: 400px;
+}
+
+.device-view {
+    display: none;
+}
+
+.computer-view {
+    display: inline;
+}
+
+.date{
+    width: 30px;
+    height: 30px;
+}
+
+@media (max-width: 768px) {
+    h4{
+        width: 100%;
+        text-align: center;
     }
-    .tables{
-        display: flex;
-        align-items: baseline;
-        margin-left: 200px;
-        padding: 5px;
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
     }
-    .tables>p{
-        padding-right: 20px;
-        padding-left: 5px;
+
+    .chart {
+        max-width: 300px;
     }
+
+    .device-view {
+    display: inline;
+    }
+
+    .computer-view {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    h4{
+        width: 100%;
+        text-align: center;
+    }
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart {
+        max-width: 100%;
+    }
+
+    .device-view {
+    display: inline;
+    }
+
+    .computer-view {
+        display: none;
+    }
+}
+
 </style>

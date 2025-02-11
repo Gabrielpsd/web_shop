@@ -217,17 +217,5 @@ export default {
         cursor: not-allowed; /* Change cursor to indicate unavailability */
         pointer-events: none; /* Disable all mouse events */
     }
-    .busy_dot{
-        height: 15px;
-        width: 15px;
-        background-color: red;
-        border-radius: 50%;
 
-    }
-    .free_dot{
-        height: 15px;
-        width: 15px;
-        background-color: green;
-        border-radius: 50%;
-    }
 </style>

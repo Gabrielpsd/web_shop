@@ -163,31 +163,94 @@ export default {
 </template>
 
 <style scoped>
-    pessoaCard {
-        margin: 1px;
+   .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    margin: 0 auto;
+    width: 90%;
+    padding: 20px;
+    gap: 10px;
+}
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.filtros select {
+    width: 100%;
+    max-width: 250px;
+}
+
+.chartArea {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.chart {
+    width: 100%;
+    max-width: 400px;
+}
+
+.device-view {
+    display: none;
+}
+
+.computer-view {
+    display: inline;
+}
+
+.date{
+    width: 30px;
+    height: 30px;
+}
+
+@media (max-width: 768px) {
+    h4{
+        width: 100%;
+        text-align: center;
     }
-    .grid{
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        margin: 0 auto;
-        padding: 10px;
-        width: 80%;
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
     }
-    .filtros{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        margin: 10px;
+
+    .chart {
+        max-width: 300px;
     }
-    .chart{
-        height: 50vh;
-        width: 15vw;
+
+    .device-view {
+    display: inline;
     }
-    .chartArea{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        margin: 20px;
+
+    .computer-view {
+        display: none;
     }
+}
+
+@media (max-width: 480px) {
+    h4{
+        width: 100%;
+        text-align: center;
+    }
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart {
+        max-width: 100%;
+    }
+
+    .device-view {
+    display: inline;
+    }
+
+    .computer-view {
+        display: none;
+    }
+}
 
 </style>

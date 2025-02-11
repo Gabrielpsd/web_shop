@@ -119,12 +119,22 @@ export default {
             <input v-model="id_lancamento" placeholder="ID lancamento" />
             <input v-model="id_fornecedor" placeholder="ID fornecedor" />
             <input v-model="fornecedor" placeholder="Fornecedor" />
-            <div>
+            <div class="device-view">
+                <label for="">Data inicial</label>
+                <input type="text" :value="this.data_inicial" :disabled="true" size="10"/>
+                <input type="date" class="date" @input="(arg)=>this.data_inicial = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})">
+            </div>
+            <div class="device-view">
+                <label for="">Data final</label>
+                <input type="text" :value="this.data_final" :disabled="true" size="10"/>
+                <input type="date" class="date" @input="(arg)=>this.data_final = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})">
+            </div>
+            <div class="computer-view">
                 <label for="">Data inicial</label>
                 <input type="text" :value="this.data_inicial" :disabled="true"/>
                 <input type="date" class="date" @input="(arg)=>this.data_inicial = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})">
             </div>
-            <div>
+            <div class="computer-view">
                 <label for="">Data final</label>
                 <input type="text" :value="this.data_final" :disabled="true"/>
                 <input type="date" class="date" @input="(arg)=>this.data_final = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})">
@@ -171,31 +181,94 @@ export default {
 </template>
 
 <style scoped>
-    .grid{
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        margin: 0 auto;
-        width: 80%;
+   .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    margin: 0 auto;
+    width: 90%;
+    padding: 20px;
+    gap: 10px;
+}
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.filtros select {
+    width: 100%;
+    max-width: 250px;
+}
+
+.chartArea {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.chart {
+    width: 100%;
+    max-width: 400px;
+}
+
+.device-view {
+    display: none;
+}
+
+.computer-view {
+    display: inline;
+}
+
+.date{
+    width: 30px;
+    height: 30px;
+}
+
+@media (max-width: 768px) {
+    h4{
+        width: 100%;
+        text-align: center;
     }
-    .filtros{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        margin: 10px;
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
     }
-    .date{
-        height: 30px;
-        width: 30px;
+
+    .chart {
+        max-width: 300px;
     }
-    .chart{
-        height: 200px;
-        width: 25%;
+
+    .device-view {
+    display: inline;
     }
-    .chartArea{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        margin: 20px;
+
+    .computer-view {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    h4{
+        width: 100%;
+        text-align: center;
+    }
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart {
         max-width: 100%;
     }
+
+    .device-view {
+    display: inline;
+    }
+
+    .computer-view {
+        display: none;
+    }
+}
+
 </style>

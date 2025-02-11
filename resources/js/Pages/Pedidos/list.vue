@@ -151,6 +151,7 @@ export default {
 <template>
     <div >
         <div class="filtros">
+            <h4>Filtros</h4>
             <input v-model="id_lancamento" placeholder="ID lancamento" />
             <input v-model="id_cliente" placeholder="ID cliente" />
             <input v-model="cliente" placeholder="Cliente" />
@@ -159,12 +160,22 @@ export default {
                 <option  :value="'M'">Masculino</option>
                 <option  :value="'F'">Feminino</option>
             </select>
-            <div>
+            <div class="device-view">
+                <label for="">Data inicial</label>
+                <input type="text" :value="this.data_inicial" :disabled="true" size="10"/>
+                <input type="date" class="date" @input="(arg)=>this.data_inicial = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})">
+            </div>
+            <div class="device-view">
+                <label for="">Data final</label>
+                <input type="text" :value="this.data_final" :disabled="true" size="10"/>
+                <input type="date" class="date" @input="(arg)=>this.data_final = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})" >
+            </div>
+            <div class="computer-view">
                 <label for="">Data inicial</label>
                 <input type="text" :value="this.data_inicial" :disabled="true"/>
                 <input type="date" class="date" @input="(arg)=>this.data_inicial = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})">
             </div>
-            <div>
+            <div class="computer-view">
                 <label for="">Data final</label>
                 <input type="text" :value="this.data_final" :disabled="true"/>
                 <input type="date" class="date" @input="(arg)=>this.data_final = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})">
@@ -211,36 +222,94 @@ export default {
 </template>
 
 <style scoped>
-    pedidoCard{
-        margin: 1px;
+   .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    margin: 0 auto;
+    width: 90%;
+    padding: 20px;
+    gap: 10px;
+}
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.filtros select {
+    width: 100%;
+    max-width: 250px;
+}
+
+.chartArea {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.chart {
+    width: 100%;
+    max-width: 400px;
+}
+
+.device-view {
+    display: none;
+}
+
+.computer-view {
+    display: inline;
+}
+
+.date{
+    width: 30px;
+    height: 30px;
+}
+
+@media (max-width: 768px) {
+    h4{
+        width: 100%;
+        text-align: center;
     }
-    .grid{
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        margin: 0 auto;
-        width: 80%;
-        padding: 20px;
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
     }
-    .filtros{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        max-height: 40px;
-        margin: 10px;
+
+    .chart {
+        max-width: 300px;
     }
-    .date{
-        height: 30px;
-        width: 30px;
+
+    .device-view {
+    display: inline;
     }
-    .chart{
-        height: 200px;
-        width: 25%;
+
+    .computer-view {
+        display: none;
     }
-    .chartArea{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        margin: 20px;
+}
+
+@media (max-width: 480px) {
+    h4{
+        width: 100%;
+        text-align: center;
+    }
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart {
         max-width: 100%;
     }
+
+    .device-view {
+    display: inline;
+    }
+
+    .computer-view {
+        display: none;
+    }
+}
+
 </style>

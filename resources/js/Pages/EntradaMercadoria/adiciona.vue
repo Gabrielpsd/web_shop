@@ -100,7 +100,11 @@ export default{
                 <option disabled value="0">Selecione um fornecedor</option>
                 <option v-for="fornecedor in this.Fornecedores" :value="fornecedor.id">{{fornecedor.descricao}}</option>
             </select>
-            <div>
+            <div class="device-view">
+                <input type="text" :value="this.data_compra" :disabled="true" size="10"/>
+                <input type="date" class="date" @input="(arg)=>this.formataData(arg)">
+            </div>
+            <div class="computer-view">
                 <input type="text" :value="this.data_compra" :disabled="true"/>
                 <input type="date" class="date" @input="(arg)=>this.formataData(arg)">
             </div>
@@ -112,21 +116,43 @@ export default{
 </template>
 
 <style scoped>
+select {
+    width: 100%;
+    max-width: 250px;
+    margin-bottom: 10px;
+}
     ul{
         color: red;
     }
     .campoInvalido{
         border-color: red;
     }
-    input{
-        margin: 2px;
-    }
-    select{
-        margin: 2px;
-        max-width: 200px;
-    }
     .date{
         height: 30px;
         width: 30px;
+    }
+
+    .computer-view {
+        display: inline;
+    }
+    .device-view {
+        display: none;
+    }
+    @media (max-width: 768px) {
+        .computer-view {
+            display: none;
+        }
+        .device-view {
+            display: inline;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .computer-view {
+            display: none;
+        }
+        .device-view {
+            display: inline;
+        }
     }
 </style>
