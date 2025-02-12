@@ -2,8 +2,6 @@
 import Layout from '../shared/Layout.vue'
 import pessoaCard from '../cartoes/pessoaCard.vue'
 import adicionar from '../ClienteFornecedor/adicionar.vue'
-import CpfCNPJinput from '../utils/CpfCNPJinput.vue';
-import { readUsedSize } from 'chart.js/helpers';
 import piChart from '../Dashboard/graficos/piChart.vue';
 import GraficoDonut from '../Dashboard/graficos/graficoDonut.vue';
 import rotas from '../Assets/ConfigFiles/apiconfig'
@@ -16,7 +14,6 @@ export default {
     components:{
         pessoaCard,
         adicionar,
-        CpfCNPJinput,
         piChart,
         GraficoDonut
     },
@@ -86,7 +83,7 @@ export default {
                 return ((item.descricao+'').toLowerCase().indexOf(this.descricao.toLowerCase()) > -1)     
             })
             .filter((item)=>{
-                return ((item.cpf_cnpj+'').toLowerCase().indexOf(this.cpf_cnpj.toLowerCase()) > -1)     
+                return ((item.cpf_cnpj+'').toLowerCase().indexOf(this.cpf_cnpj.toLowerCase().replace(/\D/g,'')) > -1)     
             }).filter((item)=>{
                 if(this.fornecedor === '0' )
                     return true
@@ -114,12 +111,10 @@ export default {
 <template>
     <div >
         <div class="filtros">
+        <h3 class="device-view"> Clientes e fornecedores</h3>
         <h4>Filtros</h4>
             <input v-model="id_lancamento" placeholder="ID lancamento" />
-            <div>
-                CPF_CNPJ
-                <CpfCNPJinput @atualiza="(arg)=>this.cpf_cnpj = arg"></CpfCNPJinput>
-            </div>
+            <input v-model="cpf_cnpj" v-mask="['###.###.###-##', '##.###.###/####-##']" placeholder="CPF ou CNPJ" />
             <input v-model="descricao" placeholder="Nome" />
             <select v-model="sexo">
                 <option  :value="'0'">Sexo</option>
@@ -232,6 +227,17 @@ export default {
 }
 
 @media (max-width: 480px) {
+    h3 {
+        color: #2c3e50;
+        font-size: 1.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #3498db;
+        text-transform: capitalize;
+        margin: 1.5rem 0;
+        position: relative;
+        }
     h4{
         width: 100%;
         text-align: center;

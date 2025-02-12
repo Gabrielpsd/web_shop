@@ -33,6 +33,7 @@ export default {
 
 <template>
     <div >
+        <h3 class="device-view">Marcas </h3>
         <div class="grid">
             <adicionar @adicionar="(arg)=>adicionarMarca(arg)"></adicionar>
             <marcaCard :marca='marca' v-for="marca in marcas" @deletaMarca="(arg)=>deletaMarca(arg)" :key="marca.id"></marcaCard>
@@ -78,10 +79,6 @@ export default {
     display: none;
 }
 
-.computer-view {
-    display: inline;
-}
-
 .date{
     width: 30px;
     height: 30px;
@@ -104,12 +101,32 @@ export default {
     display: inline;
     }
 
-    .computer-view {
-        display: none;
-    }
+    h3 {
+        color: #2c3e50;
+        font-size: 1.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #3498db;
+        text-transform: capitalize;
+        margin: 1.5rem 0;
+        position: relative;
+        }
 }
 
 @media (max-width: 480px) {
+    h3 {
+        color: #2c3e50;
+        font-size: 1.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #3498db;
+        text-transform: capitalize;
+        margin: 1.5rem 0;
+        position: relative;
+    }
+    
     h4{
         width: 100%;
         text-align: center;
@@ -126,9 +143,6 @@ export default {
     display: inline;
     }
 
-    .computer-view {
-        display: none;
-    }
 }
 
 </style>

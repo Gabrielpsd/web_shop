@@ -151,6 +151,7 @@ export default {
 <template>
     <div >
         <div class="filtros">
+            <h3 class="device-view">Pedidos</h3>
             <h4>Filtros</h4>
             <input v-model="id_lancamento" placeholder="ID lancamento" size="15"/>
             <input v-model="id_cliente" placeholder="ID cliente" size="15"/>
@@ -269,6 +270,18 @@ export default {
 }
 
 @media (max-width: 768px) {
+    h3 {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #3498db;
+  text-transform: capitalize;
+  margin: 1.5rem 0;
+  position: relative;
+}
+
     h4{
         width: 100%;
         text-align: center;
@@ -291,6 +304,17 @@ export default {
 }
 
 @media (max-width: 480px) {
+    h3 {
+        color: #2c3e50;
+        font-size: 1.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #3498db;
+        text-transform: capitalize;
+        margin: 1.5rem 0;
+        position: relative;
+        }
     h4{
         width: 100%;
         text-align: center;

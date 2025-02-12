@@ -6,7 +6,7 @@ use App\Http\Controllers\PedidosController;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\ProdutoController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AuthController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,8 +18,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/',  [AuthController::class, 'loginPage']);
+Route::get('/login',  [AuthController::class, 'loginPage'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/user', [AuthController::class, 'user']); 
+Route::post('/register', [AuthController::class, 'register']);
+
+
+Route::middleware(['auth'])->group(function () {
 /* Dashboard Area */
-Route::get('/',  [PedidosController::class,'index']);
 Route::get('/api/dashboard/vendasporsexo', [DashBoardController::class,'vendasPorSexo']);
 Route::get('/api/dashboard/pessoasPorIdade', [DashBoardController::class,'pessoasPorIdade']);
 Route::get('/api/dashboard/vendasPorIdade', [DashBoardController::class,'vendasPorIdade']);
@@ -64,3 +72,5 @@ Route::post('/api/entradas/removerProdutos/{id}',[EntradaMercadoriaController::c
 
 /* Upload a file */ 
 Route::post('/api/upload', [EntradaMercadoriaController::class,'uploadFile']);
+
+});

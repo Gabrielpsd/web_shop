@@ -123,6 +123,7 @@ export default {
 <template>
     <div>
         <div class="filtros">
+            <h3 class="device-view"> Produtos </h3>
             <h4>Filtros</h4>
             <input v-model="id_lancamento" placeholder="ID lancamento" />
             <input v-model="descricao" placeholder="Descricao" />
@@ -246,6 +247,17 @@ export default {
     .computer-view {
         display: none;
     }
+    h3 {
+        color: #2c3e50;
+        font-size: 1.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #3498db;
+        text-transform: capitalize;
+        margin: 1.5rem 0;
+        position: relative;
+        }
 }
 
 @media (max-width: 480px) {
@@ -268,6 +280,17 @@ export default {
     .computer-view {
         display: none;
     }
+    h3 {
+        color: #2c3e50;
+        font-size: 1.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #3498db;
+        text-transform: capitalize;
+        margin: 1.5rem 0;
+        position: relative;
+        }
 }
 
 </style>
