@@ -202,17 +202,22 @@ export default {
     max-width: 250px;
 }
 
+
 .chartArea {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     gap: 10px;
+    background-color: rgb(241, 241, 241);
+    padding: 3px;
 }
 
 .chart {
-    width: 100%;
-    max-width: 400px;
+    width: 80%;
+    max-width: 350px;
 }
+
 
 .device-view {
     display: none;

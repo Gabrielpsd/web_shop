@@ -86,7 +86,7 @@ export default {
                 return ((item.cpf_cnpj+'').toLowerCase().indexOf(this.cpf_cnpj.toLowerCase().replace(/\D/g,'')) > -1)     
             }).filter((item)=>{
                 if(this.fornecedor === '0' )
-                    return true
+                    return true 
                 return (item.fornecedor == this.fornecedor)     
             }).filter((item)=>{
                 if(this.sexo == '0')
@@ -102,6 +102,7 @@ export default {
     watch: {
         listaFiltrada()
         {
+            console.log("vou gerar os graficos novamente")
             this.geraGraficos()
         }
     }
@@ -179,17 +180,22 @@ export default {
     max-width: 250px;
 }
 
+
 .chartArea {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     gap: 10px;
+    background-color: rgb(241, 241, 241);
+    padding: 3px;
 }
 
 .chart {
-    width: 100%;
-    max-width: 400px;
+    width: 80%;
+    max-width: 350px;
 }
+
 
 .device-view {
     display: none;

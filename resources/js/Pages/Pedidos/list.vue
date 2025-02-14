@@ -33,11 +33,11 @@ export default {
             })
             .filter((item)=>{
                 let data = new Date(item.data_venda).toLocaleDateString('pt-BR', {timeZone: 'UTC'})
-                return ( data >= this.data_inicial)
+                return ( data >= new Date(this.data_inicial).toLocaleDateString('pt-BR', {timeZone: 'UTC'}))
             })
             .filter((item)=>{
                 let data = new Date(item.data_venda).toLocaleDateString('pt-BR', {timeZone: 'UTC'})
-                return (data <= this.data_final)
+                return (data <= new Date(this.data_final).toLocaleDateString('pt-BR', {timeZone: 'UTC'}))
             })
             .filter((item)=>{
                 if(this.sexo == '0')
@@ -46,7 +46,6 @@ export default {
             })
 
             this.dadosGrafico = items
-
             return items
         }
 
@@ -163,23 +162,19 @@ export default {
             </select>
             <div class="device-view">
                 <label for="">Data inicial</label>
-                <input type="text" :value="this.data_inicial" :disabled="true" size="10"/>
-                <input type="date" class="date" @input="(arg)=>this.data_inicial = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})">
+                <input type="date"  pattern="\d{2}/\d{2}/\d{4}"  v-model="data_inicial">    
             </div>
             <div class="device-view">
                 <label for="">Data final</label>
-                <input type="text" :value="this.data_final" :disabled="true" size="10"/>
-                <input type="date" class="date" @input="(arg)=>this.data_final = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})" >
+                <input type="date"  pattern="\d{2}/\d{2}/\d{4}"  v-model="data_final">    
             </div>
             <div class="computer-view">
                 <label for="">Data inicial</label>
-                <input type="text" :value="this.data_inicial" :disabled="true"/>
-                <input type="date" class="date" @input="(arg)=>this.data_inicial = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})">
+                <input type="date"  pattern="\d{2}/\d{2}/\d{4}"  v-model="data_inicial">    
             </div>
             <div class="computer-view">
                 <label for="">Data final</label>
-                <input type="text" :value="this.data_final" :disabled="true"/>
-                <input type="date" class="date" @input="(arg)=>this.data_final = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})">
+                <input type="date"  pattern="\d{2}/\d{2}/\d{4}"  v-model="data_final">    
             </div>
         </div>
         <div class="chartArea">
@@ -255,6 +250,7 @@ export default {
     width: 80%;
     max-width: 350px;
 }
+
 
 .device-view {
     display: none;

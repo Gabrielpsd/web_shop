@@ -25,6 +25,7 @@ export default {
         return{
         entradas : this.Entradas,
         fornecedor: '',
+        test: '',
         id_lancamento: '',
         id_fornecedor:'',
         data_inicial: new Date('01/01/1900').toLocaleDateString('pt-BR', {timeZone: 'UTC'}),
@@ -44,6 +45,7 @@ export default {
     watch:{
         itemsFiltrados()
         {
+            console.log("Testando: ",this.test)
             this.dadosGraficoComprasPorData= {labels: [], data:[], carregado: false, colors: [],key:this.dadosGraficoComprasPorData.key + 1 }
             this.dadosGraficoTotalComprasPorFornecedor= {labels: [], data:[], carregado: false, colors: [],key:this.dadosGraficoTotalComprasPorFornecedor.key + 1 }
             this.dadosGraficoTotalQuantidadeComprasPorFornecedor= {labels: [], data:[], carregado: false, colors: [],key:this.dadosGraficoTotalQuantidadeComprasPorFornecedor.key + 1 }
@@ -86,7 +88,7 @@ export default {
     },
     computed:{
         filtraBusca: function(){
-            let items =  this.Entradas.filter((item)=>{
+           let items =  this.entradas.filter((item)=>{
                 return ((item.id+'').toLowerCase().indexOf(this.id_lancamento) > -1) 
             })
             .filter((item)=>{
@@ -97,16 +99,17 @@ export default {
             })
             .filter((item)=>{
                 let data = new Date(item.data_compra).toLocaleDateString('pt-BR', {timeZone: 'UTC'})
-                return (data <= this.data_final)
+                return (data <= new Date(this.data_final).toLocaleDateString('pt-BR', {timeZone: 'UTC'}))
             })
             .filter((item)=>{
                 let data = new Date(item.data_compra).toLocaleDateString('pt-BR', {timeZone: 'UTC'})
-                return ( data >= this.data_inicial)
+                return ( data >= new Date(this.data_inicial).toLocaleDateString('pt-BR', {timeZone: 'UTC'}))
             })
 
             this.itemsFiltrados = items
 
             return items
+
         }
     }, 
 }
@@ -120,26 +123,15 @@ export default {
             <input v-model="id_lancamento" placeholder="ID lancamento" />
             <input v-model="id_fornecedor" placeholder="ID fornecedor" />
             <input v-model="fornecedor" placeholder="Fornecedor" />
-            <div class="device-view">
+            <div>
                 <label for="">Data inicial</label>
-                <input type="text" :value="this.data_inicial" :disabled="true" size="10"/>
-                <input type="date" class="date" @input="(arg)=>this.data_inicial = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})">
+                <input type="date"  pattern="\d{2}/\d{2}/\d{4}"  v-model="data_inicial">
             </div>
-            <div class="device-view">
+            <div>
                 <label for="">Data final</label>
-                <input type="text" :value="this.data_final" :disabled="true" size="10"/>
-                <input type="date" class="date" @input="(arg)=>this.data_final = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})">
+                <input type="date" pattern="\d{2}/\d{2}/\d{4}" v-model="data_final">
             </div>
-            <div class="computer-view">
-                <label for="">Data inicial</label>
-                <input type="text" :value="this.data_inicial" :disabled="true"/>
-                <input type="date" class="date" @input="(arg)=>this.data_inicial = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})">
-            </div>
-            <div class="computer-view">
-                <label for="">Data final</label>
-                <input type="text" :value="this.data_final" :disabled="true"/>
-                <input type="date" class="date" @input="(arg)=>this.data_final = new Date(arg.explicitOriginalTarget.value).toLocaleDateString('pt-BR', {timeZone: 'UTC'})">
-            </div>
+
         </div>
         <div class="chartArea">
             <div class="chart">
@@ -226,11 +218,6 @@ export default {
     display: inline;
 }
 
-.date{
-    width: 30px;
-    height: 30px;
-}
-
 @media (max-width: 768px) {
     h4{
         width: 100%;
@@ -244,13 +231,6 @@ export default {
         max-width: 300px;
     }
 
-    .device-view {
-    display: inline;
-    }
-
-    .computer-view {
-        display: none;
-    }
     h3 {
         color: #2c3e50;
         font-size: 1.8rem;
@@ -288,13 +268,7 @@ export default {
         max-width: 100%;
     }
 
-    .device-view {
-    display: inline;
-    }
 
-    .computer-view {
-        display: none;
-    }
 }
 
 </style>

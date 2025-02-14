@@ -15,7 +15,7 @@ export default{
             cpf_cnpj: '',
             cpfInvalido: false,
             sexo: 0,
-            idade: ''
+            dataNascimento: new Date('01/01/1900').toLocaleDateString('pt-BR', {timeZone: 'UTC'}),
           }
     },
     components:{
@@ -27,14 +27,14 @@ export default{
             if(this.validacoes())
             {
 
-                let obj = this
+                /* let obj = this
                 const csrfToken = document.getElementsByName("_token")[0].value
                 var request = new XMLHttpRequest()
                 
                 let pessoa = JSON.stringify({'descricao':this.nome, 
                                             'fornecedor': this.fornecedor,
                                             'cpf_cnpj': this.cpf_cnpj,
-                                            'idade': this.idade,
+                                            'data_nascimento': this.dataNascimento,
                                             'sexo': this.sexo})
                 request.open('POST',rotas.pessoas.inserirPessoa,true)
                 request.setRequestHeader("Content-Type","application/json")
@@ -49,13 +49,16 @@ export default{
                 } 
 
                 request.send(pessoa)
+
                 this.cancelaAdicao()
+ */             
 
             } 
 
         },
         validacoes()
         {   
+            console.log("IDade", this.dataNascimento)
             let retorno = true
             this.cpfInvalido = false
             this.tamanhoNomeInvalido = false
@@ -97,8 +100,15 @@ export default{
         atualizaCPFCNPJ(valor)
         {
             this.cpf_cnpj = valor
+        },
+        ChangeDate()
+        {
+            let aux = this.dataNascimento.split('-')
+            this.dataNascimento = `${aux[2]}-${aux[1]}-${aux[0]}`
+            console.log(`${aux[2]}-${aux[1]}-${aux[0]}`)
+            console.log(this.dataNascimento)
         }
-    }
+    },
 }
 </script>
 
@@ -138,9 +148,9 @@ export default{
                 </select>
                 <h5>CPF/CNPJ</h5>
                 <CpfCNPJinput :disable="edicaoInativa" :number="this.cpf" @atualiza="(arg)=>this.cpf_cnpj = arg"></CpfCNPJinput>
-                    <h5>Idade</h5>
-                    <inputIntNumber :number="idade" @atualiza="(args)=>{this.idade = args}" :disable="edicaoInativa"></inputIntNumber>
-            </div> 
+                    <label for="">Data nascimento</label>
+                    <input class="input-model" type="date"  @input="ChangeDate" v-model="dataNascimento">
+                </div> 
         </div>
         <ul v-if="tamanhoNomeInvalido">
             <li v-if="tamanhoNomeInvalido">Nome deve conter no minimo 3 caracteres</li>
@@ -157,5 +167,8 @@ export default{
     }
     .campoInvalido{
         border-color: red;
+    }
+    .input-model{
+        width: 100%;
     }
 </style>
